@@ -14,3 +14,5 @@ LinkingTo:
     RcppArmadillo
 Imports: 
     Rcpp
+URL: https://github.com/heatherjzhou/ClipperQTL
+BugReports: https://github.com/heatherjzhou/ClipperQTL/issues
