@@ -1,10 +1,10 @@
 Package: ClipperQTL
 Type: Package
-Title: Ultrafast eGene identification method for large sample sizes
+Title: ClipperQTL: ultrafast and powerful eGene identification method
 Version: 0.1.0
 Author: Heather J. Zhou
 Maintainer: Heather J. Zhou <heatherjzhou@ucla.edu>
-Description: This package implements ClipperQTL, an eGene identification method designed for large sample sizes that is orders of magnitude faster than yet as powerful as FastQTL.
+Description: This package implements ClipperQTL, an eGene identification method that is orders of magnitude faster than yet as powerful as FastQTL.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
@@ -13,6 +13,7 @@ LinkingTo:
     Rcpp,
     RcppArmadillo
 Imports:
-    Rcpp
+    Rcpp,
+    readr
 URL: https://github.com/heatherjzhou/ClipperQTL
 BugReports: https://github.com/heatherjzhou/ClipperQTL/issues
