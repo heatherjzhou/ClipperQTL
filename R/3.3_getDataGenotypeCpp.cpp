@@ -88,7 +88,7 @@ Rcpp::List getDataGenotypeCpp(const std::string chrCurr,
   myFile2.close(); //Close the file.
   remove(tempFileName.c_str()); //Delete the temp file.
 
-  //Filter SNPs. If MAFThreshold and MASamples are 0, then the following code doesn't change X.
+  //Filter SNPs (if MAFThreshold and MASamples are 0, then this step doesn't change X).
   // vec numsOfSamples0=conv_to<vec>::from(sum(X==0,1)); //1 means to return the statistic for each row. NaN==0 returns false. Use conv_to because otherwise I get a uvec rather than vec, which leads to MAFs being rounded to integers.
   // vec numsOfSamples1=conv_to<vec>::from(sum(X==1,1));
   // vec numsOfSamples2=conv_to<vec>::from(sum(X==2,1));

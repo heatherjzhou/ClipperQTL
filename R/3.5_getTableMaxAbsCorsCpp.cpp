@@ -46,9 +46,9 @@ mat getTableMaxAbsCorsCpp(const mat Y,
     mat absCorMatrix=abs(cor(YCubeSub,XSub.t())); //21*7261.
 
     //Fill tableMaxAbsCors.
-    // tableMaxAbsCors.row(indexOfGene)=max(absCorMatrix,1).t(); //1 means to return the statistic for each row. Chose not to use this because max(,1) behaves weirdly when the first entry of a row is NA.
+    // tableMaxAbsCors.row(indexOfGene)=max(absCorMatrix,1).t(); //1 means to return the statistic for each row. Chose not to use this because max(,1) cannot handle NAs correctly when the first entry of a row is NA.
     for(int indexOfExperAndBg=0;indexOfExperAndBg<(1+B);indexOfExperAndBg++){
-      tableMaxAbsCors(indexOfGene,indexOfExperAndBg)=max(absCorMatrix.row(indexOfExperAndBg)); //max() can handle NA entries correctly when the argument is a vector.
+      tableMaxAbsCors(indexOfGene,indexOfExperAndBg)=max(absCorMatrix.row(indexOfExperAndBg)); //max() can handle NAs correctly when the argument is a vector.
     }
   }
 
