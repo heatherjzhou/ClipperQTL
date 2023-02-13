@@ -2,6 +2,7 @@
 
 
 prepareDataGeneExpressionFPSub<-function(dataGeneExpressionFP,indexOfChunk,chunkInfo){
+  # #Load dataGeneExpressionFP.
   # tissueType<-"Lung" #Sample size is 515.
   # exprFile<-paste0("~/_Data/2020.09.21_GTEx_V8/1_Raw/Single_Tissue_cis_QTL_Data/GTEx_Analysis_v8_eQTL_expression_matrices/",
   #                  tissueType,".v8.normalized_expression.bed.gz")
@@ -9,7 +10,8 @@ prepareDataGeneExpressionFPSub<-function(dataGeneExpressionFP,indexOfChunk,chunk
   # colnames(dataGeneExpressionFP)[1]<-"chr" #26,095*519. The first four columns are chr, start, end, and gene_id. end is used as TSS.
   #
   # indexOfChunk<-5
-  # chunkInfo<-readRDS("~/2022.03.14_ClipperQTL/ClipperQTL/R/_temp/_chunkInfo.rds")
+  # outputDir<-paste0("~/2022.03.14_ClipperQTL/ClipperQTL/R/_temp/",tissueType,"/")
+  # chunkInfo<-readRDS(paste0(outputDir,"_chunkInfo.rds")) #103*4.
   # #To comment out.
 
   chrCurr<-chunkInfo$chr[indexOfChunk] #chr1.

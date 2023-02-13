@@ -30,7 +30,7 @@ ClipperQTL<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
   #                 tissueType,"/",numOfPCs,"ExprPCs.txt")
   # genotypeFile<-"~/_Data/2020.09.21_GTEx_V8/1_Raw/GTEx_Analysis_2017-06-05_v8_WGS_VCF_files/GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.SHAPEIT2_phased.MAF01.vcf.gz"
   # tabixProgram<-"~/_Applications/htslib-1.10.2/bin/tabix"
-  # outputDir<-"~/2022.03.14_ClipperQTL/ClipperQTL/R/_temp/"
+  # outputDir<-paste0("~/2022.03.14_ClipperQTL/ClipperQTL/R/_temp/",tissueType,"/")
   # rm(tissueType,numOfPCs)
   #
   # B<-20

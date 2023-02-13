@@ -2,7 +2,8 @@
 
 
 combineChunks<-function(outputDir,chunkInfo){
-  # outputDir<-"~/2022.03.14_ClipperQTL/ClipperQTL/R/_temp/"
+  # tissueType<-"Lung" #Sample size is 515.
+  # outputDir<-paste0("~/2022.03.14_ClipperQTL/ClipperQTL/R/_temp/",tissueType,"/")
   # chunkInfo<-readRDS(paste0(outputDir,"_chunkInfo.rds")) #103*4.
 
   pathResultCombined<-paste0(outputDir,"_resultCombined.txt")

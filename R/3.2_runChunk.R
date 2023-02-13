@@ -32,8 +32,9 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
   #   dataGeneExpressionFP<-temp$dataGeneExpressionFP #26,095*519. The first four columns are chr, start, end, and gene_id. end is used as TSS.
   #   dataCovariates<-temp$dataCovariates #515*52. The columns are the known and inferred covariates. No need to convert the matrix to a data frame.
   #
+  #   #Load dataGeneExpressionFPSub.
   #   indexOfChunk<-5
-  #   outputDir<-"~/2022.03.14_ClipperQTL/ClipperQTL/R/_temp/"
+  #   outputDir<-paste0("~/2022.03.14_ClipperQTL/ClipperQTL/R/_temp/",tissueType,"/")
   #   chunkInfo<-readRDS(paste0(outputDir,"_chunkInfo.rds")) #103*4.
   #   source("~/2022.03.14_ClipperQTL/ClipperQTL/R/3.1_prepareDataGeneExpressionFPSub.R")
   #   dataGeneExpressionFPSub<-prepareDataGeneExpressionFPSub(dataGeneExpressionFP,indexOfChunk,chunkInfo) #257*519. The first four columns are chr, start, end, and gene_id. end is used as TSS.
@@ -61,7 +62,7 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
   Y<-as.matrix(dataGeneExpressionFPSub[,-(1:4)]) #257*515. Key variable.
   # dim(Y)
 
-  #Get dataGenotype (SNPInfo and X). This takes about 11 seconds.
+  #Get dataGenotype (SNPInfo and X). This takes about 15 seconds.
   if(TRUE){
     cat("\nObtaining genotype data for Chunk ",indexOfChunk,"...\n",sep="")
     timeStart<-Sys.time()
@@ -77,7 +78,7 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
     print(timeEnd-timeStart) #print() is better than cat() for time difference.
   }
 
-  #Residualize Y and X. This takes about 5 seconds.
+  #Residualize Y and X. This takes about 7 seconds.
   if(TRUE){
     cat("\nResidualizing expression and genotype data against covariates for Chunk ",indexOfChunk,"...\n",sep="")
     timeStart<-Sys.time()
@@ -89,7 +90,7 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
     print(timeEnd-timeStart) #print() is better than cat() for time difference.
   }
 
-  #Get tableMaxAbsCors. This takes about 14 or 23 seconds, depending on conditions (not sure how).
+  #Get tableMaxAbsCors. This takes about 21 seconds.
   if(TRUE){
     cat("\nCalculating maximum absolute correlations for Chunk ",indexOfChunk,"...\n",sep="")
 
