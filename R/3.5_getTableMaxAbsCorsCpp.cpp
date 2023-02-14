@@ -4,8 +4,8 @@ using namespace arma;
 
 //Given Y, gene by sample expression matrix (residualized, no informational columns),
 //X, SNP by sample genotype matrix (residualized, no informational columns),
-//geneTSSs, vector of gene TSSs, corresponding to rows of Y,
-//SNPPositions, vector of SNP positions, corresponding to rows of X,
+//geneTSSs, vector of gene TSSs, corresponding to the rows of Y,
+//SNPPositions, vector of SNP positions, corresponding to the rows of X,
 //and B,
 //get tableMaxAbsCors.
 //[[Rcpp::export()]]
