@@ -1,9 +1,11 @@
 #include <RcppArmadillo.h>
+#include "3.4_residualizeCpp.h"
 using namespace arma;
 
 
-//Given Y, gene by sample expression matrix (residualized, no informational columns),
+//Given Y, gene by sample expression matrix (not residualized, no informational columns),
 //X, SNP by sample genotype matrix (residualized, no informational columns),
+//dataCovariates, sample by covariate covariate matrix,
 //geneTSSs, vector of gene TSSs, corresponding to the rows of Y,
 //SNPPositions, vector of SNP positions, corresponding to the rows of X,
 //and B,
@@ -11,6 +13,7 @@ using namespace arma;
 //[[Rcpp::export()]]
 mat getTableMaxAbsCorsCpp(const mat Y,
                           const mat X,
+                          const mat dataCovariates,
                           const vec geneTSSs,
                           const vec SNPPositions,
                           const int B){
@@ -20,13 +23,25 @@ mat getTableMaxAbsCorsCpp(const mat Y,
   //Create tableMaxAbsCors. To be filled and returned.
   mat tableMaxAbsCors(Y.n_rows,1+B); //257*21. Each row corresponds to a gene. The columns are: exp, bg1, ..., bg20.
 
-  //Create YCube, where the first slice is Y, and each of the remaining slices is a YPerm.
+  // //Create YCube, where the first slice is Y, and each of the remaining slices is a YPerm.
+  // cube YCube(Y.n_rows,Y.n_cols,1+B); //257*515*21.
+  // for(int indexOfExperAndBg=0;indexOfExperAndBg<(1+B);indexOfExperAndBg++){
+  //   if(indexOfExperAndBg==0){
+  //     YCube.slice(indexOfExperAndBg)=Y;
+  //   }else{
+  //     YCube.slice(indexOfExperAndBg)=shuffle(Y,1); //1 means to shuffle each row.
+  //   }
+  // }
+
+  //Create YCube, where the first slice is YResid, and each of the remaining slices is a YPermResid.
   cube YCube(Y.n_rows,Y.n_cols,1+B); //257*515*21.
   for(int indexOfExperAndBg=0;indexOfExperAndBg<(1+B);indexOfExperAndBg++){
     if(indexOfExperAndBg==0){
-      YCube.slice(indexOfExperAndBg)=Y;
+      mat YResid=residualizeCpp(Y.t(),dataCovariates); //257*515.
+      YCube.slice(indexOfExperAndBg)=YResid;
     }else{
-      YCube.slice(indexOfExperAndBg)=shuffle(Y,1); //1 means to shuffle each row.
+      mat YPermResid=residualizeCpp(shuffle(Y,1).t(),dataCovariates); //257*515. 1 means to shuffle each row.
+      YCube.slice(indexOfExperAndBg)=YPermResid;
     }
   }
 

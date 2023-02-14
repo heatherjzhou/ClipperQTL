@@ -81,12 +81,12 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
   # sum(abs(SNPPositions-geneTSSs[1])<=1e6) #7261 local common SNPs for the first gene in Lung, Chunk 5. Matches FastQTL.
   # sum(abs(SNPPositions-geneTSSs[2])<=1e6) #7278 local common SNPs for the second gene in Lung, Chunk 5. Matches FastQTL.
 
-  #Residualize Y and X. This takes about 7 seconds.
+  #Residualize X. This takes about 7 seconds.
   if(TRUE){
-    cat("\nResidualizing expression and genotype data against covariates for Chunk ",indexOfChunk,"...\n",sep="")
+    cat("\nResidualizing genotype data against covariates for Chunk ",indexOfChunk,"...\n",sep="")
     timeStart<-Sys.time()
 
-    YResid<-residualizeCpp(t(Y),dataCovariates) #257*515. Key variable.
+    # YResid<-residualizeCpp(t(Y),dataCovariates) #257*515. Key variable.
     XResid<-residualizeCpp(t(X),dataCovariates) #131,682*515. Key variable.
 
     timeEnd<-Sys.time()
@@ -99,8 +99,9 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
 
     timeStart<-Sys.time()
 
-    tableMaxAbsCors<-getTableMaxAbsCorsCpp(YResid, #257*515.
+    tableMaxAbsCors<-getTableMaxAbsCorsCpp(Y, #257*515.
                                            XResid, #131,682*515.
+                                           dataCovariates, #515*52.
                                            geneTSSs, #Vector of length 257.
                                            SNPPositions, #Vector of length 131,682.
                                            B
