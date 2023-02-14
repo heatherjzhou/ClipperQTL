@@ -78,6 +78,9 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
     print(timeEnd-timeStart) #print() is better than cat() for time difference.
   }
 
+  # sum(abs(SNPPositions-geneTSSs[1])<=1e6) #7261 local common SNPs for the first gene in Lung, Chunk 5. Matches FastQTL.
+  # sum(abs(SNPPositions-geneTSSs[2])<=1e6) #7278 local common SNPs for the second gene in Lung, Chunk 5. Matches FastQTL.
+
   #Residualize Y and X. This takes about 7 seconds.
   if(TRUE){
     cat("\nResidualizing expression and genotype data against covariates for Chunk ",indexOfChunk,"...\n",sep="")
@@ -90,7 +93,7 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
     print(timeEnd-timeStart) #print() is better than cat() for time difference.
   }
 
-  #Get tableMaxAbsCors. This takes about 21 seconds.
+  #Get tableMaxAbsCors. This takes about 18 seconds.
   if(TRUE){
     cat("\nCalculating maximum absolute correlations for Chunk ",indexOfChunk,"...\n",sep="")
 
