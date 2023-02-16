@@ -4,9 +4,8 @@
 
 #For code development only:
 library(dplyr)
-Rcpp::sourceCpp("~/2022.03.14_ClipperQTL/ClipperQTL/R/3.3_getDataGenotypeCpp.cpp")
-Rcpp::sourceCpp("~/2022.03.14_ClipperQTL/ClipperQTL/R/3.4_residualizeCpp.cpp")
-Rcpp::sourceCpp("~/2022.03.14_ClipperQTL/ClipperQTL/R/3.5_getTableMaxAbsCorsCpp.cpp")
+Rcpp::sourceCpp("~/2022.03.14_ClipperQTL/ClipperQTL/R/3.2_getDataGenotypeCpp.cpp")
+Rcpp::sourceCpp("~/2022.03.14_ClipperQTL/ClipperQTL/R/3.3_getTableMaxAbsCorsCpp.cpp")
 
 
 
@@ -36,10 +35,10 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
   #   indexOfChunk<-5
   #   outputDir<-paste0("~/2022.03.14_ClipperQTL/ClipperQTL/R/_temp/",tissueType,"/")
   #   chunkInfo<-readRDS(paste0(outputDir,"_chunkInfo.rds")) #103*4.
-  #   source("~/2022.03.14_ClipperQTL/ClipperQTL/R/3.1_prepareDataGeneExpressionFPSub.R")
+  #   source("~/2022.03.14_ClipperQTL/ClipperQTL/R/2.4_prepareDataGeneExpressionFPSub.R")
   #   dataGeneExpressionFPSub<-prepareDataGeneExpressionFPSub(dataGeneExpressionFP,indexOfChunk,chunkInfo) #257*519. The first four columns are chr, start, end, and gene_id. end is used as TSS.
   #
-  #   rm(list=setdiff(ls(),c("getDataGenotypeCpp","residualizeCpp","getTableMaxAbsCorsCpp",
+  #   rm(list=setdiff(ls(),c("getDataGenotypeCpp","getTableMaxAbsCorsCpp",
   #                          "dataGeneExpressionFPSub","dataCovariates","indexOfChunk","outputDir")))
   # }
   #
@@ -62,7 +61,7 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
   Y<-as.matrix(dataGeneExpressionFPSub[,-(1:4)]) #257*515. Key variable.
   # dim(Y)
 
-  #Get dataGenotype (SNPInfo and X). This takes about 15 seconds.
+  #Get dataGenotype (SNPInfo and X). This takes about 11 seconds.
   if(TRUE){
     cat("\nObtaining genotype data for Chunk ",indexOfChunk,"...\n",sep="")
     timeStart<-Sys.time()
@@ -75,32 +74,21 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
     X<-dataGenotype$X #131,682*515. Key variable.
 
     timeEnd<-Sys.time()
+    cat("\nObtaining genotype data for Chunk ",indexOfChunk," took: ",sep="")
     print(timeEnd-timeStart) #print() is better than cat() for time difference.
   }
 
-  # sum(abs(SNPPositions-geneTSSs[1])<=1e6) #7261 local common SNPs for the first gene in Lung, Chunk 5. Matches FastQTL.
-  # sum(abs(SNPPositions-geneTSSs[2])<=1e6) #7278 local common SNPs for the second gene in Lung, Chunk 5. Matches FastQTL.
+  # sum(abs(SNPPositions-geneTSSs[1])<=1e6) #7261 local common SNPs for the first gene in Chunk 5 of Lung. Matches FastQTL.
+  # sum(abs(SNPPositions-geneTSSs[2])<=1e6) #7278 local common SNPs for the second gene in Chunk 5 of Lung. Matches FastQTL.
 
-  #Residualize X. This takes about 7 seconds.
-  if(TRUE){
-    cat("\nResidualizing genotype data against covariates for Chunk ",indexOfChunk,"...\n",sep="")
-    timeStart<-Sys.time()
-
-    # YResid<-residualizeCpp(t(Y),dataCovariates) #257*515. Key variable.
-    XResid<-residualizeCpp(t(X),dataCovariates) #131,682*515. Key variable.
-
-    timeEnd<-Sys.time()
-    print(timeEnd-timeStart) #print() is better than cat() for time difference.
-  }
-
-  #Get tableMaxAbsCors. This takes about 18 seconds.
+  #Get tableMaxAbsCors. This takes about 16 or 24 seconds, depending on conditions.
   if(TRUE){
     cat("\nCalculating maximum absolute correlations for Chunk ",indexOfChunk,"...\n",sep="")
 
     timeStart<-Sys.time()
 
     tableMaxAbsCors<-getTableMaxAbsCorsCpp(Y, #257*515.
-                                           XResid, #131,682*515.
+                                           X, #131,682*515.
                                            dataCovariates, #515*52.
                                            geneTSSs, #Vector of length 257.
                                            SNPPositions, #Vector of length 131,682.
@@ -108,6 +96,7 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
                                            ) #257*21. Each row corresponds to a gene. The columns are: exp, bg1, ..., bg20.
 
     timeEnd<-Sys.time()
+    cat("\nCalculating maximum absolute correlations for Chunk ",indexOfChunk," took: ",sep="")
     print(timeEnd-timeStart) #print() is better than cat() for time difference.
   }
 

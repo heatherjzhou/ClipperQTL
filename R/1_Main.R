@@ -8,9 +8,9 @@ library(dplyr)
 source("~/2022.03.14_ClipperQTL/ClipperQTL/R/2.1_prepareExprAndCovData.R")
 source("~/2022.03.14_ClipperQTL/ClipperQTL/R/2.2_prepareSampleIndices.R")
 source("~/2022.03.14_ClipperQTL/ClipperQTL/R/2.3_prepareChunkInfo.R")
+source("~/2022.03.14_ClipperQTL/ClipperQTL/R/2.4_prepareDataGeneExpressionFPSub.R")
 
-source("~/2022.03.14_ClipperQTL/ClipperQTL/R/3.1_prepareDataGeneExpressionFPSub.R")
-source("~/2022.03.14_ClipperQTL/ClipperQTL/R/3.2_runChunk.R")
+source("~/2022.03.14_ClipperQTL/ClipperQTL/R/3.1_runChunk.R")
 
 source("~/2022.03.14_ClipperQTL/ClipperQTL/R/4.1_combineChunks.R")
 

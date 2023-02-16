@@ -4,7 +4,7 @@
 
 Rcpp::sourceCpp("~/2022.03.14_ClipperQTL/ClipperQTL/test/2023.02.13_testNABehavior/23.02.18_func1.1_testFunctions.cpp")
 
-#max(,1) behaves weirdly when the first entry of a row is NA.
+#max(,1) cannot handle NAs correctly when the first entry of a row is NA.
 if(TRUE){
   X<-matrix(data=sample(1:9,9),nrow=3,byrow=TRUE)
   X
@@ -16,7 +16,7 @@ if(TRUE){
   testFunction1(X)
 }
 
-#max() can handle NA entries correctly when the argument is a vector.
+#max() can handle NAs correctly when the argument is a vector.
 if(TRUE){
   x<-sample(1:9,9)
   x
