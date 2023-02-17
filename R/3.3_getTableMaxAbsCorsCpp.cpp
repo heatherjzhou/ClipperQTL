@@ -34,7 +34,7 @@ mat getTableMaxAbsCorsCpp(const mat Y,
 
   //Get the design matrix.
   mat D=getDesignMatrix(dataCovariates); //515*53. Design matrix.
-  // mat H=D*(D.t()*D).i()*D.t(); //515*515. Projection matrix. H=D*(D^T*D)^(-1)*D^T. Symmetric matrix. Not calculating the projection matrix in advance is more computationally efficient.
+  // mat H=D*(D.t()*D).i()*D.t(); //515*515. Projection matrix. H=D*(D^T*D)^(-1)*D^T. Symmetric matrix. Not calculating the projection matrix in advance cuts the runtime in about half.
 
   //Create YCube, where the first slice is YResid, and each of the remaining slices is a YPermResid.
   cube YCube(Y.n_rows,Y.n_cols,1+B); //257*515*21.
@@ -51,7 +51,7 @@ mat getTableMaxAbsCorsCpp(const mat Y,
     }
   }
 
-  //Residualize XRaw against the covariates. Use this specific sequence of steps for the fastest speed. Inspired by residualizeCpp().
+  //Residualize XRaw against the covariates. Use the following sequence of steps for the fastest speed. Inspired by residualizeCpp().
   //Using two steps instead of only one step reduces the runtime by about 4 seconds.
   //Ensuring that the smaller matrices are multiplied together first in the calculation of coef_T reduces the runtime slightly.
   mat coef_T=XRaw*(D*(D.t()*D).i());

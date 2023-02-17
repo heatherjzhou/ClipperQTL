@@ -63,7 +63,6 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
 
   #Get dataGenotype (SNPInfo and X). This takes about 11 seconds.
   if(TRUE){
-    cat("\nObtaining genotype data for Chunk ",indexOfChunk,"...\n",sep="")
     timeStart<-Sys.time()
 
     dataGenotype<-getDataGenotypeCpp(chrCurr=dataGeneExpressionFPSub$chr[1],geneTSSs,genotypeFile,tabixProgram,tempFileName=tempfile(),
@@ -74,7 +73,7 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
     X<-dataGenotype$X #131,682*515. Key variable.
 
     timeEnd<-Sys.time()
-    cat("\nObtaining genotype data for Chunk ",indexOfChunk," took: ",sep="")
+    cat("Obtaining genotype data for Chunk ",indexOfChunk," took: ",sep="")
     print(timeEnd-timeStart) #print() is better than cat() for time difference.
   }
 
@@ -83,8 +82,6 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
 
   #Get tableMaxAbsCors. This takes about 16 or 24 seconds, depending on conditions.
   if(TRUE){
-    cat("\nCalculating maximum absolute correlations for Chunk ",indexOfChunk,"...\n",sep="")
-
     timeStart<-Sys.time()
 
     tableMaxAbsCors<-getTableMaxAbsCorsCpp(Y, #257*515.
@@ -96,7 +93,7 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
                                            ) #257*21. Each row corresponds to a gene. The columns are: exp, bg1, ..., bg20.
 
     timeEnd<-Sys.time()
-    cat("\nCalculating maximum absolute correlations for Chunk ",indexOfChunk," took: ",sep="")
+    cat("Calculating maximum absolute correlations for Chunk ",indexOfChunk," took: ",sep="")
     print(timeEnd-timeStart) #print() is better than cat() for time difference.
   }
 

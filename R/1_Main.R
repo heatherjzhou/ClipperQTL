@@ -43,7 +43,7 @@ ClipperQTL<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
   # #To comment out.
 
   #Prepare dataGeneExpressionFP and dataCovariates.
-  cat("\nReading in expression data and covariate data...\n")
+  cat("Reading in expression data and covariate data...\n")
   temp<-prepareExprAndCovData(exprFile,covFile)
   dataGeneExpressionFP<-temp$dataGeneExpressionFP #26,095*519. The first four columns are chr, start, end, and gene_id. end is used as TSS.
   dataCovariates<-temp$dataCovariates #515*52. The columns are the known and inferred covariates. No need to convert the matrix to a data frame.
@@ -53,12 +53,12 @@ ClipperQTL<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
   if(!dir.exists(outputDir)) dir.create(outputDir)
 
   #Prepare sampleIndices, a vector representing which columns of the genotype file correspond to samples in the expression and covariate data (need to subtract 1 before using in Cpp).
-  cat("\nPreparing sample indices...\n")
+  cat("Preparing sample indices...\n")
   sampleIndices<-prepareSampleIndices(genotypeFile,tabixProgram,outputDir,
                                       sampleNames=colnames(dataGeneExpressionFP)[-(1:4)]) #Vector of length 515.
 
   #Prepare chunkInfo.
-  cat("\nPartitioning genes into approximately",numOfChunksTarget,"chunks...\n")
+  cat("Partitioning genes into approximately",numOfChunksTarget,"chunks...\n")
   chunkInfo<-prepareChunkInfo(dataGeneExpressionFP,numOfChunksTarget,outputDir) #103*4.
 
   #Run chunks. This creates resultChunk1.rds, resultChunk2.rds, etc.
@@ -68,7 +68,7 @@ ClipperQTL<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
     results<-parallel::mclapply(chunkInfo$indexOfChunk,FUN=function(indexOfChunk){
       # indexOfChunk<-1 #To comment out.
 
-      cat("\nRunning Chunk",indexOfChunk,"out of",nrow(chunkInfo),"chunks...\n")
+      cat("\nRunning Chunk",indexOfChunk,"out of",nrow(chunkInfo),"chunks...\n") #Include a new line at the beginning of this print message to make it stand out from the rest.
 
       dataGeneExpressionFPSub<-prepareDataGeneExpressionFPSub(dataGeneExpressionFP,indexOfChunk,chunkInfo) #257*519. The first four columns are chr, start, end, and gene_id. end is used as TSS.
 
@@ -79,13 +79,17 @@ ClipperQTL<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
       gc()
       return(0)
     },mc.cores=numOfCores) #results is a list of length nrow(chunkInfo). Each core takes up to ... memory.
-    cat("\n\n\n",unlist(results),"\n\n\n",sep="") #0 means success. unlist() is neccessary, or else cat() won't work.
+
+    # chunkInfo<-readRDS("~/2022.03.14_ClipperQTL/ClipperQTL/R/_temp/Lung/_chunkInfo.rds")
+    # results<-rep(0,nrow(chunkInfo))
+    # results<-as.list(results)
+    cat("\n",unlist(results),"\n",sep="") #0 means success. unlist() is neccessary, or else cat() won't work. Include a new line at the beginning of this print message to make it stand out from the rest.
   }
 
-  cat("\nCombining results...\n")
+  cat("\nCombining results...\n") #Include a new line at the beginning of this print message to make it stand out from the rest.
   combineChunks(outputDir,chunkInfo)
 
-  cat("\nClipperQTL finished running.\n")
+  cat("ClipperQTL finished running.\n")
 }
 
 

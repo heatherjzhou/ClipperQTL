@@ -26,7 +26,7 @@ prepareExprAndCovData<-function(exprFile,covFile){
   # dataCovariates[,8]<-1 #Test print message.
   vars<-apply(dataCovariates,2,var)
   if(any(vars==0)){
-    cat("\nIndex (or indices) of constant covariate(s): ")
+    cat("Index (or indices) of constant covariate(s): ")
     cat(which(vars==0),sep=", ")
     cat(". Constant covariates are filtered out for the analysis.\n")
 
