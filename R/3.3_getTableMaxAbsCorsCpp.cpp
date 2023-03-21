@@ -19,6 +19,7 @@ mat getDesignMatrix(const mat X){
 //dataCovariates, the sample by covariate covariate matrix (without a column of ones),
 //geneTSSs, the vector of gene TSSs, corresponding to the rows of Y,
 //SNPPositions, the vector of SNP positions, corresponding to the rows of X,
+//approach,
 //and B,
 //get tableMaxAbsCors.
 //[[Rcpp::export()]]
@@ -27,6 +28,7 @@ mat getTableMaxAbsCorsCpp(const mat Y,
                           const mat dataCovariates,
                           const vec geneTSSs,
                           const vec SNPPositions,
+                          const std::string approach,
                           const int B){
 
   //Create tableMaxAbsCors. To be filled and returned.
@@ -36,18 +38,32 @@ mat getTableMaxAbsCorsCpp(const mat Y,
   mat D=getDesignMatrix(dataCovariates); //515*53. Design matrix.
   // mat H=D*(D.t()*D).i()*D.t(); //515*515. Projection matrix. H=D*(D^T*D)^(-1)*D^T. Symmetric matrix. Not calculating the projection matrix in advance cuts the runtime in about half.
 
-  //Create YCube, where the first slice is YResid, and each of the remaining slices is a YPermResid.
+  //Create YCube.
+  //If approach is "standard", then the first slice is YResid, and each of the remaining slices is a YPermResid.
+  //If approach is "Clipper", then the first slice is YResid, and each of the remaining slices is a YResidPerm.
   cube YCube(Y.n_rows,Y.n_cols,1+B); //257*515*21.
-  for(int indexOfExperAndBg=0;indexOfExperAndBg<(1+B);indexOfExperAndBg++){
-    if(indexOfExperAndBg==0){
-      // mat YResid=Y-Y*H; //257*515.
-      mat YResid=Y-Y*D*(D.t()*D).i()*D.t(); //257*515.
-      YCube.slice(indexOfExperAndBg)=YResid;
-    }else{
-      mat YPerm=shuffle(Y,1); //1 means to shuffle each row.
-      // mat YPermResid=YPerm-YPerm*H; //257*515.
-      mat YPermResid=YPerm-YPerm*D*(D.t()*D).i()*D.t(); //257*515.
-      YCube.slice(indexOfExperAndBg)=YPermResid;
+  if(approach=="standard"){ //Permute first, then residualize.
+    for(int indexOfExperAndBg=0;indexOfExperAndBg<(1+B);indexOfExperAndBg++){
+      if(indexOfExperAndBg==0){
+        // mat YResid=Y-Y*H; //257*515.
+        mat YResid=Y-Y*D*(D.t()*D).i()*D.t(); //257*515.
+        YCube.slice(indexOfExperAndBg)=YResid;
+      }else{
+        mat YPerm=shuffle(Y,1); //1 means to shuffle each row.
+        // mat YPermResid=YPerm-YPerm*H; //257*515.
+        mat YPermResid=YPerm-YPerm*D*(D.t()*D).i()*D.t(); //257*515.
+        YCube.slice(indexOfExperAndBg)=YPermResid;
+      }
+    }
+  }else if(approach=="Clipper"){ //Residualize first, then permute.
+    // mat YResid=Y-Y*H; //257*515.
+    mat YResid=Y-Y*D*(D.t()*D).i()*D.t(); //257*515.
+    for(int indexOfExperAndBg=0;indexOfExperAndBg<(1+B);indexOfExperAndBg++){
+      if(indexOfExperAndBg==0){
+        YCube.slice(indexOfExperAndBg)=YResid;
+      }else{
+        YCube.slice(indexOfExperAndBg)=shuffle(YResid,1); //1 means to shuffle each row.
+      }
     }
   }
 

@@ -8,7 +8,8 @@ library(dplyr)
 source("~/2022.03.14_ClipperQTL/ClipperQTL/R/2.1_prepareExprAndCovData.R")
 source("~/2022.03.14_ClipperQTL/ClipperQTL/R/2.2_prepareSampleIndices.R")
 source("~/2022.03.14_ClipperQTL/ClipperQTL/R/2.3_prepareChunkInfo.R")
-source("~/2022.03.14_ClipperQTL/ClipperQTL/R/2.4_prepareDataGeneExpressionFPSub.R")
+source("~/2022.03.14_ClipperQTL/ClipperQTL/R/2.4_prepareMethodParameters.R")
+source("~/2022.03.14_ClipperQTL/ClipperQTL/R/2.5_prepareDataGeneExpressionFPSub.R")
 
 source("~/2022.03.14_ClipperQTL/ClipperQTL/R/3.1_runChunk.R")
 
@@ -16,8 +17,8 @@ source("~/2022.03.14_ClipperQTL/ClipperQTL/R/4.1_combineChunks.R")
 
 
 ClipperQTL<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
-                     B=20,MAFThreshold=0.01,MASamplesThreshold=10,
-                     numOfChunksTarget=100,seed=1,numOfCores=5){
+                     approach=NULL,B=NULL,MAFThreshold=0.01,MASamplesThreshold=10,
+                     numOfChunksTarget=100,seed=1,numOfCores=1){
   # tissueType<-"Lung" #Sample size is 515.
   # numOfPCs<-44 #Chosen via BE.
   #
@@ -33,7 +34,8 @@ ClipperQTL<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
   # outputDir<-paste0("~/2022.03.14_ClipperQTL/ClipperQTL/R/_temp/",tissueType,"/")
   # rm(tissueType,numOfPCs)
   #
-  # B<-20
+  # approach<-NULL
+  # B<-NULL
   # MAFThreshold<-0.01
   # MASamplesThreshold<-10
   #
@@ -61,11 +63,17 @@ ClipperQTL<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
   cat("Partitioning genes into approximately",numOfChunksTarget,"chunks...\n")
   chunkInfo<-prepareChunkInfo(dataGeneExpressionFP,numOfChunksTarget,outputDir) #103*4.
 
+  #Prepare method parameters.
+  temp<-prepareMethodParameters(approach,B,sampleSize=nrow(dataCovariates))
+  approach<-temp$approach #"standard" or "Clipper".
+  B<-temp$B #Default is 1000 or 20, depending on approach.
+  rm(temp)
+
   #Run chunks. This creates resultChunk1.rds, resultChunk2.rds, etc.
   if(TRUE){
     RNGkind("L'Ecuyer-CMRG") #This is necessary to ensure reproducibility when using mclapply().
-    set.seed(seed) #For permuting y.
-    results<-parallel::mclapply(chunkInfo$indexOfChunk,FUN=function(indexOfChunk){
+    set.seed(seed) #For permutations.
+    results<-parallel::mclapply(chunkInfo$indexOfChunk,FUN=function(indexOfChunk){ #parallel is a base package, so it doesn't need to be imported in the description file of the package.
       # indexOfChunk<-1 #To comment out.
 
       cat("\nRunning Chunk",indexOfChunk,"out of",nrow(chunkInfo),"chunks...\n") #Include a new line at the beginning of this print message to make it stand out from the rest.
@@ -74,7 +82,7 @@ ClipperQTL<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
 
       runChunk(dataGeneExpressionFPSub,dataCovariates,
                genotypeFile,tabixProgram,sampleIndices,
-               B,MAFThreshold,MASamplesThreshold,
+               approach,B,MAFThreshold,MASamplesThreshold,
                indexOfChunk,outputDir)
       gc()
       return(0)
@@ -83,7 +91,9 @@ ClipperQTL<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
     # chunkInfo<-readRDS("~/2022.03.14_ClipperQTL/ClipperQTL/R/_temp/Lung/_chunkInfo.rds")
     # results<-rep(0,nrow(chunkInfo))
     # results<-as.list(results)
-    cat("\n",unlist(results),"\n",sep="") #0 means success. unlist() is neccessary, or else cat() won't work. Include a new line at the beginning of this print message to make it stand out from the rest.
+    # cat("\n",unlist(results),"\n",sep="") #0 means success. unlist() is neccessary, or else cat() won't work. Include a new line at the beginning of this print message to make it stand out from the rest.
+    cat("\n") #Include a new line here to make the print message stand out from the rest.
+    print(unlist(results)) #0 means success.
   }
 
   cat("\nCombining results...\n") #Include a new line at the beginning of this print message to make it stand out from the rest.

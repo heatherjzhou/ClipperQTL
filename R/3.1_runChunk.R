@@ -11,7 +11,7 @@ Rcpp::sourceCpp("~/2022.03.14_ClipperQTL/ClipperQTL/R/3.3_getTableMaxAbsCorsCpp.
 
 runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
                    genotypeFile,tabixProgram,sampleIndices,
-                   B,MAFThreshold,MASamplesThreshold,
+                   approach,B,MAFThreshold,MASamplesThreshold,
                    indexOfChunk,outputDir){
   # #Load dataGeneExpressionFPSub and dataCovariates.
   # if(TRUE){
@@ -35,7 +35,7 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
   #   indexOfChunk<-5
   #   outputDir<-paste0("~/2022.03.14_ClipperQTL/ClipperQTL/R/_temp/",tissueType,"/")
   #   chunkInfo<-readRDS(paste0(outputDir,"_chunkInfo.rds")) #103*4.
-  #   source("~/2022.03.14_ClipperQTL/ClipperQTL/R/2.4_prepareDataGeneExpressionFPSub.R")
+  #   source("~/2022.03.14_ClipperQTL/ClipperQTL/R/2.5_prepareDataGeneExpressionFPSub.R")
   #   dataGeneExpressionFPSub<-prepareDataGeneExpressionFPSub(dataGeneExpressionFP,indexOfChunk,chunkInfo) #257*519. The first four columns are chr, start, end, and gene_id. end is used as TSS.
   #
   #   rm(list=setdiff(ls(),c("getDataGenotypeCpp","getTableMaxAbsCorsCpp",
@@ -49,6 +49,7 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
   #                                     sampleNames=colnames(dataGeneExpressionFPSub)[-(1:4)]) #Vector of length 515.
   # rm(prepareSampleIndices)
   #
+  # approach<-"standard"
   # B<-20
   # MAFThreshold<-0.01
   # MASamplesThreshold<-10
@@ -77,6 +78,8 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
     print(timeEnd-timeStart) #print() is better than cat() for time difference.
   }
 
+  # dim(SNPInfo) #131,682*3.
+  # dim(X) #131,682*515.
   # sum(abs(SNPPositions-geneTSSs[1])<=1e6) #7261 local common SNPs for the first gene in Chunk 5 of Lung. Matches FastQTL.
   # sum(abs(SNPPositions-geneTSSs[2])<=1e6) #7278 local common SNPs for the second gene in Chunk 5 of Lung. Matches FastQTL.
 
@@ -89,6 +92,7 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
                                            dataCovariates, #515*52.
                                            geneTSSs, #Vector of length 257.
                                            SNPPositions, #Vector of length 131,682.
+                                           approach,
                                            B
                                            ) #257*21. Each row corresponds to a gene. The columns are: exp, bg1, ..., bg20.
 
@@ -107,9 +111,10 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
 }
 
 
-
-
-
+# resultChunk5_2023.02.16<-readRDS("~/2022.03.14_ClipperQTL/ClipperQTL/R/_temp/Lung/resultChunk5_2023.02.16.rds")
+# resultChunk5<-readRDS("~/2022.03.14_ClipperQTL/ClipperQTL/R/_temp/Lung/resultChunk5.rds")
+# identical(resultChunk5,resultChunk5_2023.02.16) #TRUE is good.
+# max(abs(resultChunk5[,-(1:4)]-resultChunk5_2023.02.16[,-(1:4)])) #0 is good.
 
 
 
