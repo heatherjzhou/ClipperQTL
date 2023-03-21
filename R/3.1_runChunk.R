@@ -4,8 +4,8 @@
 
 # #For code development only:
 # library(dplyr)
-# Rcpp::sourceCpp("~/2022.03.14_ClipperQTL/ClipperQTL/R/3.2_getDataGenotypeCpp.cpp")
-# Rcpp::sourceCpp("~/2022.03.14_ClipperQTL/ClipperQTL/R/3.3_getTableMaxAbsCorsCpp.cpp")
+# Rcpp::sourceCpp("~/2022.03.14_ClipperQTL/ClipperQTL/src/3.2_getDataGenotypeCpp.cpp")
+# Rcpp::sourceCpp("~/2022.03.14_ClipperQTL/ClipperQTL/src/3.3_getTableMaxAbsCorsCpp.cpp")
 
 
 
@@ -49,7 +49,7 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
   #                                     sampleNames=colnames(dataGeneExpressionFPSub)[-(1:4)]) #Vector of length 515.
   # rm(prepareSampleIndices)
   #
-  # approach<-"standard"
+  # approach<-"standard" #This is for testing only. Normally "standard" requires a large B, e.g., B=1000.
   # B<-20
   # MAFThreshold<-0.01
   # MASamplesThreshold<-10
@@ -108,8 +108,13 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
   #Save resultChunk.
   path<-paste0(outputDir,"resultChunk",indexOfChunk,".rds") #resultChunk1.rds.
   saveRDS(resultChunk,path)
-}
 
+  # #Check the result.
+  # resultChunk5<-readRDS("~/2022.03.14_ClipperQTL/ClipperQTL/R/_temp/Lung/resultChunk5.rds")
+  # resultChunk5_2023.02.16<-readRDS("~/2022.03.14_ClipperQTL/ClipperQTL/R/_temp/Lung/resultChunk5_2023.02.16.rds")
+  # identical(resultChunk5,resultChunk5_2023.02.16) #TRUE is good.
+  # max(abs(resultChunk5[,-(1:4)]-resultChunk5_2023.02.16[,-(1:4)])) #0 is good.
+}
 
 
 
