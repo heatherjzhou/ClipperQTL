@@ -2,10 +2,10 @@
 
 
 
-#For code development only:
-library(dplyr)
-Rcpp::sourceCpp("~/2022.03.14_ClipperQTL/ClipperQTL/R/3.2_getDataGenotypeCpp.cpp")
-Rcpp::sourceCpp("~/2022.03.14_ClipperQTL/ClipperQTL/R/3.3_getTableMaxAbsCorsCpp.cpp")
+# #For code development only:
+# library(dplyr)
+# Rcpp::sourceCpp("~/2022.03.14_ClipperQTL/ClipperQTL/R/3.2_getDataGenotypeCpp.cpp")
+# Rcpp::sourceCpp("~/2022.03.14_ClipperQTL/ClipperQTL/R/3.3_getTableMaxAbsCorsCpp.cpp")
 
 
 
@@ -111,10 +111,6 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
 }
 
 
-# resultChunk5_2023.02.16<-readRDS("~/2022.03.14_ClipperQTL/ClipperQTL/R/_temp/Lung/resultChunk5_2023.02.16.rds")
-# resultChunk5<-readRDS("~/2022.03.14_ClipperQTL/ClipperQTL/R/_temp/Lung/resultChunk5.rds")
-# identical(resultChunk5,resultChunk5_2023.02.16) #TRUE is good.
-# max(abs(resultChunk5[,-(1:4)]-resultChunk5_2023.02.16[,-(1:4)])) #0 is good.
 
 
 
