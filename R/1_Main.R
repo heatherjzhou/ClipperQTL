@@ -1,4 +1,4 @@
-#' Test function
+#' ClipperQTL
 #'
 #' @export
 

@@ -23,11 +23,11 @@ mat getDesignMatrix(const mat X){
 //and B,
 //get tableMaxAbsCors.
 //[[Rcpp::export()]]
-mat getTableMaxAbsCorsCpp(const mat Y,
-                          const mat XRaw, //To be residualized.
-                          const mat dataCovariates,
-                          const vec geneTSSs,
-                          const vec SNPPositions,
+arma::mat getTableMaxAbsCorsCpp(const arma::mat Y,
+                          const arma::mat XRaw, //To be residualized.
+                          const arma::mat dataCovariates,
+                          const arma::vec geneTSSs,
+                          const arma::vec SNPPositions,
                           const std::string approach,
                           const int B){
 

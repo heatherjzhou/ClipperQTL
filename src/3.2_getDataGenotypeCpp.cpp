@@ -9,12 +9,12 @@ using namespace arma;
 //sampleIndices represents which columns of the temp file correspond to the samples in the expression and covariate data (need to subtract 1 before using in Cpp).
 //[[Rcpp::export()]]
 Rcpp::List getDataGenotypeCpp(const std::string chrCurr,
-                              const vec geneTSSs,
+                              const arma::vec geneTSSs,
                               const std::string genotypeFile,
                               const std::string tabixProgram,
                               const std::string tempFileName,
 
-                              const vec sampleIndices,
+                              const arma::vec sampleIndices,
                               const double MAFThreshold,
                               const int MASamplesThreshold){
 
