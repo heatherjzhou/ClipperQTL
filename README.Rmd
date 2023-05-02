@@ -1,0 +1,22 @@
+---
+output: github_document
+title: ClipperQTL
+---
+
+
+```{r,echo=FALSE}
+setwd("~/2022.03.14_ClipperQTL/ClipperQTL") #Set the working directory as the directory that this README.Rmd file is in.
+```
+
+
+
+
+## 1. Installation
+
+```{r,eval=FALSE}
+#install.packages("devtools")
+devtools::install_github("heatherjzhou/ClipperQTL") #If prompted, make sure to update RcppArmadillo. Otherwise the installation of ClipperQTL will fail.
+```
+
+
+

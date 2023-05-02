@@ -19,7 +19,7 @@ prepareMethodParameters<-function(approach,B,sampleSize){
   }else if(approach=="Clipper"){
     if(sampleSize<450){
       message('\nWarning: since the sample size is under 450, we strongly recommend using approach="standard".\n') #Include a new line at the beginning of this print message to make it stand out from the rest.
-      message('\nContinuing with approach="Clipper"...\n') #Include a new line at the beginning of this print message to make it stand out from the rest.
+      message('Continuing with approach="Clipper"...\n') #Do not include a new line at the beginning of this print message because message() already skips a line.
     }
   }else{
     stop('approach must be NULL, "standard", or "Clipper".\n')
@@ -37,3 +37,6 @@ prepareMethodParameters<-function(approach,B,sampleSize){
   toReturn<-list(approach=approach,B=B)
   return(toReturn)
 }
+
+
+# prepareMethodParameters(approach="Clipper",B=30,sampleSize=200) #Test print messages.
