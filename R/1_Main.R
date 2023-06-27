@@ -17,7 +17,8 @@
 
 
 ClipperQTL<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
-                     approach=NULL,B=NULL,MAFThreshold=0.01,MASamplesThreshold=10,
+                     approach="standard",B=1000,
+                     cisDistance=1e6,MAFThreshold=0.01,MASamplesThreshold=10,
                      numOfChunksTarget=100,seed=1,numOfCores=1){
   # tissueType<-"Lung" #Sample size is 515.
   # numOfPCs<-44 #Chosen via BE.
@@ -36,6 +37,8 @@ ClipperQTL<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
   #
   # approach<-NULL
   # B<-NULL
+  #
+  # cisDistance<-1e6
   # MAFThreshold<-0.01
   # MASamplesThreshold<-10
   #
@@ -66,7 +69,7 @@ ClipperQTL<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
   #Prepare method parameters.
   temp<-prepareMethodParameters(approach,B,sampleSize=nrow(dataCovariates))
   approach<-temp$approach #"standard" or "Clipper".
-  B<-temp$B #Default is 1000 or 20, depending on approach.
+  B<-temp$B
   rm(temp)
 
   #Run chunks. This creates resultChunk1.rds, resultChunk2.rds, etc.
@@ -82,11 +85,11 @@ ClipperQTL<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
 
       runChunk(dataGeneExpressionFPSub,dataCovariates,
                genotypeFile,tabixProgram,sampleIndices,
-               approach,B,MAFThreshold,MASamplesThreshold,
+               approach,B,cisDistance,MAFThreshold,MASamplesThreshold,
                indexOfChunk,outputDir)
       gc()
       return(0)
-    },mc.cores=numOfCores) #results is a list of length nrow(chunkInfo). Each core takes up to ... memory.
+    },mc.cores=numOfCores) #results is a list of length nrow(chunkInfo). Each core takes up to a few GB of memory.
 
     # chunkInfo<-readRDS("~/2022.03.14_ClipperQTL/ClipperQTL/R/_temp/Lung/_chunkInfo.rds")
     # results<-rep(0,nrow(chunkInfo))

@@ -15,17 +15,18 @@ Rcpp::List getDataGenotypeCpp(const std::string chrCurr,
                               const std::string tempFileName,
 
                               const arma::vec sampleIndices,
+                              const int cisDistance,
                               const double MAFThreshold,
                               const int MASamplesThreshold){
 
   // auto start=std::chrono::high_resolution_clock::now();
 
   //Run tabix.
-  int posBeginning=min(geneTSSs)-1e6; //74,786,699.
+  int posBeginning=min(geneTSSs)-cisDistance; //74,786,699.
   if(posBeginning<0){ //posBeginning should not be smaller than 0.
     posBeginning=0;
   }
-  int posEnd=max(geneTSSs)+1e6; //112,200,771.
+  int posEnd=max(geneTSSs)+cisDistance; //112,200,771.
 
   std::string region=chrCurr+":"+std::to_string(posBeginning)+"-"+std::to_string(posEnd); //chr1:74786699-112200771.
   std::string command=tabixProgram+" "+genotypeFile+" "+region+" > "+tempFileName;

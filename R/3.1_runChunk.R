@@ -11,7 +11,7 @@
 
 runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
                    genotypeFile,tabixProgram,sampleIndices,
-                   approach,B,MAFThreshold,MASamplesThreshold,
+                   approach,B,cisDistance,MAFThreshold,MASamplesThreshold,
                    indexOfChunk,outputDir){
   # #Load dataGeneExpressionFPSub and dataCovariates.
   # if(TRUE){
@@ -51,6 +51,7 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
   #
   # approach<-"standard" #This is for testing only. Normally "standard" requires a large B, e.g., B=1000.
   # B<-20
+  # cisDistance<-1e6
   # MAFThreshold<-0.01
   # MASamplesThreshold<-10
   #
@@ -67,7 +68,7 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
     timeStart<-Sys.time()
 
     dataGenotype<-getDataGenotypeCpp(chrCurr=dataGeneExpressionFPSub$chr[1],geneTSSs,genotypeFile,tabixProgram,tempFileName=tempfile(),
-                                     sampleIndices,MAFThreshold,MASamplesThreshold) #A list of two items: SNPInfo and X.
+                                     sampleIndices,cisDistance,MAFThreshold,MASamplesThreshold) #A list of two items: SNPInfo and X.
 
     SNPInfo<-dataGenotype$SNPInfo #131,682*3. The columns are: CHROM, POS, ID.
     SNPPositions<-as.integer(SNPInfo[,2]) #Vector of length 131,682. Key variable.
@@ -106,14 +107,12 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
   resultChunk<-cbind(dataGeneExpressionFPSub[,1:4],tableMaxAbsCors)
 
   #Save resultChunk.
-  path<-paste0(outputDir,"resultChunk",indexOfChunk,".rds") #resultChunk1.rds.
+  path<-paste0(outputDir,"resultChunk",indexOfChunk,".rds") #resultChunk5.rds.
   saveRDS(resultChunk,path)
 
   # #Check the result.
-  # resultChunk5<-readRDS("~/2022.03.14_ClipperQTL/ClipperQTL/R/_temp/Lung/resultChunk5.rds")
-  # resultChunk5_2023.02.16<-readRDS("~/2022.03.14_ClipperQTL/ClipperQTL/R/_temp/Lung/resultChunk5_2023.02.16.rds")
-  # identical(resultChunk5,resultChunk5_2023.02.16) #TRUE is good.
-  # max(abs(resultChunk5[,-(1:4)]-resultChunk5_2023.02.16[,-(1:4)])) #0 is good.
+  # resultChunk5_freeze<-readRDS("~/2022.03.14_ClipperQTL/ClipperQTL/R/_temp/Lung/resultChunk5_freeze.rds")
+  # max(abs(resultChunk[,-(1:4)]-resultChunk5_freeze[,-(1:4)])) #9.992007e-16.
 }
 
 

@@ -6,9 +6,14 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // getDataGenotypeCpp
-Rcpp::List getDataGenotypeCpp(const std::string chrCurr, const arma::vec geneTSSs, const std::string genotypeFile, const std::string tabixProgram, const std::string tempFileName, const arma::vec sampleIndices, const double MAFThreshold, const int MASamplesThreshold);
-RcppExport SEXP _ClipperQTL_getDataGenotypeCpp(SEXP chrCurrSEXP, SEXP geneTSSsSEXP, SEXP genotypeFileSEXP, SEXP tabixProgramSEXP, SEXP tempFileNameSEXP, SEXP sampleIndicesSEXP, SEXP MAFThresholdSEXP, SEXP MASamplesThresholdSEXP) {
+Rcpp::List getDataGenotypeCpp(const std::string chrCurr, const arma::vec geneTSSs, const std::string genotypeFile, const std::string tabixProgram, const std::string tempFileName, const arma::vec sampleIndices, const int cisDistance, const double MAFThreshold, const int MASamplesThreshold);
+RcppExport SEXP _ClipperQTL_getDataGenotypeCpp(SEXP chrCurrSEXP, SEXP geneTSSsSEXP, SEXP genotypeFileSEXP, SEXP tabixProgramSEXP, SEXP tempFileNameSEXP, SEXP sampleIndicesSEXP, SEXP cisDistanceSEXP, SEXP MAFThresholdSEXP, SEXP MASamplesThresholdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -18,9 +23,10 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const std::string >::type tabixProgram(tabixProgramSEXP);
     Rcpp::traits::input_parameter< const std::string >::type tempFileName(tempFileNameSEXP);
     Rcpp::traits::input_parameter< const arma::vec >::type sampleIndices(sampleIndicesSEXP);
+    Rcpp::traits::input_parameter< const int >::type cisDistance(cisDistanceSEXP);
     Rcpp::traits::input_parameter< const double >::type MAFThreshold(MAFThresholdSEXP);
     Rcpp::traits::input_parameter< const int >::type MASamplesThreshold(MASamplesThresholdSEXP);
-    rcpp_result_gen = Rcpp::wrap(getDataGenotypeCpp(chrCurr, geneTSSs, genotypeFile, tabixProgram, tempFileName, sampleIndices, MAFThreshold, MASamplesThreshold));
+    rcpp_result_gen = Rcpp::wrap(getDataGenotypeCpp(chrCurr, geneTSSs, genotypeFile, tabixProgram, tempFileName, sampleIndices, cisDistance, MAFThreshold, MASamplesThreshold));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -43,7 +49,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_ClipperQTL_getDataGenotypeCpp", (DL_FUNC) &_ClipperQTL_getDataGenotypeCpp, 8},
+    {"_ClipperQTL_getDataGenotypeCpp", (DL_FUNC) &_ClipperQTL_getDataGenotypeCpp, 9},
     {"_ClipperQTL_getTableMaxAbsCorsCpp", (DL_FUNC) &_ClipperQTL_getTableMaxAbsCorsCpp, 7},
     {NULL, NULL, 0}
 };

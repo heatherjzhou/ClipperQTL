@@ -34,3 +34,7 @@ prepareSampleIndices<-function(genotypeFile,tabixProgram,outputDir,
 
   return(sampleIndices)
 }
+
+
+
+
