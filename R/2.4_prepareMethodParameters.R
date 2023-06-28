@@ -9,20 +9,20 @@ prepareMethodParameters<-function(approach,B,sampleSize){
 
   if(approach=="standard"){ #Default is approach="standard" and B=1000.
     if(B<1000){
-      message('\nWarning: if approach="standard", we strongly recommend using B>=1000.\n') #Include a new line at the beginning of this print message to make it stand out from the rest.
-      message('Continuing with the user-specified B...\n')
+      cat('\n\n\n\n\nWarning: if approach="standard", we strongly recommend using B>=1000.\n') #Include 5 empty lines before and after the warning to bring attention to it.
+      cat('\n\n\n\n\nContinuing with the user-specified B...\n') #Include 5 empty lines before and after the warning to bring attention to it.
     }
   }else if(approach=="Clipper"){
     if(sampleSize<450){
-      message('\nWarning: since the sample size is under 450, we strongly recommend using approach="standard".\n') #Include a new line at the beginning of this print message to make it stand out from the rest.
-      message('Continuing with approach="Clipper"...\n')
+      cat('\n\n\n\n\nWarning: since the sample size is under 450, we strongly recommend using approach="standard".\n')
+      cat('\n\n\n\n\nContinuing with approach="Clipper"...\n')
     }
 
     if(is.null(B)){
       B<-20
     }else if(B<20||B>100){
-      message('\nWarning: if approach="Clipper", we strongly recommend using B between 20 and 100.\n') #Include a new line at the beginning of this print message to make it stand out from the rest.
-      message('Continuing with the user-specified B...\n')
+      cat('\n\n\n\n\nWarning: if approach="Clipper", we strongly recommend using B between 20 and 100.\n')
+      cat('\n\n\n\n\nContinuing with the user-specified B...\n')
     }
   }else{
     stop('Approach must be "standard" or "Clipper".\n')

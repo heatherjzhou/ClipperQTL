@@ -47,6 +47,9 @@ ClipperQTL<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
   # numOfCores<-5
   # #To comment out.
 
+  filename<-paste0(outputDir,"_log.txt")
+  sink(file=filename,type="output") #Save print messages to this file. Messages sent to stderr() (including those from message, warning, and stop) do not go here.
+
   #Prepare dataGeneExpressionFP and dataCovariates.
   cat("Reading in expression data and covariate data...\n")
   temp<-prepareExprAndCovData(exprFile,covFile)
@@ -103,6 +106,8 @@ ClipperQTL<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
   combineChunks(outputDir,chunkInfo)
 
   cat("ClipperQTL finished running.\n")
+
+  sink() #Close the connection.
 }
 
 
