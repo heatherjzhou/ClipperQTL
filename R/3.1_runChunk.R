@@ -18,9 +18,6 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
   #   tissueType<-"Lung" #Sample size is 515.
   #   numOfPCs<-44 #Chosen via BE.
   #
-  #   # tissueType<-"Brain_Cortex" #Sample size is 205.
-  #   # numOfPCs<-23 #Chosen via BE.
-  #
   #   exprFile<-paste0("~/_Data/2020.09.21_GTEx_V8/1_Raw/Single_Tissue_cis_QTL_Data/GTEx_Analysis_v8_eQTL_expression_matrices/",
   #                    tissueType,".v8.normalized_expression.bed.gz")
   #   covFile<-paste0("~/_Data/2020.09.21_GTEx_V8/3_De_Novo/2022.10.05_customCovariates_removeConstantCovariates/_Data_txt/",
@@ -49,8 +46,8 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
   #                                     sampleNames=colnames(dataGeneExpressionFPSub)[-(1:4)]) #Vector of length 515.
   # rm(prepareSampleIndices)
   #
-  # approach<-"standard" #This is for testing only. Normally "standard" requires a large B, e.g., B=1000.
-  # B<-20
+  # approach<-"Clipper" #Use this to make testing faster.
+  # B<-20 #Use this to make testing faster.
   # cisDistance<-1e6
   # MAFThreshold<-0.01
   # MASamplesThreshold<-10
@@ -58,6 +55,8 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
   # RNGkind("L'Ecuyer-CMRG")
   # set.seed(1)
   # #To comment out.
+
+
 
   geneTSSs<-dataGeneExpressionFPSub$end #Vector of length 257. Key variable.
   Y<-as.matrix(dataGeneExpressionFPSub[,-(1:4)]) #257*515. Key variable.
@@ -84,7 +83,7 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
   # sum(abs(SNPPositions-geneTSSs[1])<=1e6) #7261 local common SNPs for the first gene in Chunk 5 of Lung. Matches FastQTL.
   # sum(abs(SNPPositions-geneTSSs[2])<=1e6) #7278 local common SNPs for the second gene in Chunk 5 of Lung. Matches FastQTL.
 
-  #Get tableMaxAbsCors. This takes about 16 or 24 seconds, depending on conditions.
+  #Get tableMaxAbsCors. This takes about 16 or 24 seconds, depending on conditions. Longer as of 2023/07/01.
   if(TRUE){
     timeStart<-Sys.time()
 
@@ -110,9 +109,6 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
   path<-paste0(outputDir,"resultChunk",indexOfChunk,".rds") #resultChunk5.rds.
   saveRDS(resultChunk,path)
 
-  # #Check the result.
-  # resultChunk5_freeze<-readRDS("~/2022.03.14_ClipperQTL/ClipperQTL/R/_temp/Lung/resultChunk5_freeze.rds")
-  # max(abs(resultChunk[,-(1:4)]-resultChunk5_freeze[,-(1:4)])) #9.992007e-16.
 }
 
 

@@ -7,21 +7,21 @@ prepareMethodParameters<-function(approach,B,sampleSize){
   # sampleSize<-515
   # #To comment out.
 
-  if(approach=="standard"){ #Default is approach="standard" and B=1000.
+  if(approach=="standard"){
     if(B<1000){
-      cat('\n\n\n\n\nWarning: if approach="standard", we strongly recommend using B>=1000.\n') #Include 5 empty lines before and after the warning to bring attention to it.
-      cat('\n\n\n\n\nContinuing with the user-specified B...\n') #Include 5 empty lines before and after the warning to bring attention to it.
+      cat('\n\n\n\n\n!!!Warning: if approach="standard", we strongly recommend using B>=1000.\n') #Include 5 empty lines before and after the warning to emphasize it.
+      cat('\n\n\n\n\nContinuing with the user-specified B...\n') #Include 5 empty lines before and after the warning to emphasize it.
     }
   }else if(approach=="Clipper"){
     if(sampleSize<450){
-      cat('\n\n\n\n\nWarning: since the sample size is under 450, we strongly recommend using approach="standard".\n')
+      cat('\n\n\n\n\n!!!Warning: since the sample size is under 450, we strongly recommend using approach="standard".\n')
       cat('\n\n\n\n\nContinuing with approach="Clipper"...\n')
     }
 
     if(is.null(B)){
       B<-20
     }else if(B<20||B>100){
-      cat('\n\n\n\n\nWarning: if approach="Clipper", we strongly recommend using B between 20 and 100.\n')
+      cat('\n\n\n\n\n!!!Warning: if approach="Clipper", we strongly recommend using B between 20 and 100.\n')
       cat('\n\n\n\n\nContinuing with the user-specified B...\n')
     }
   }else{
@@ -36,7 +36,6 @@ prepareMethodParameters<-function(approach,B,sampleSize){
 # prepareMethodParameters(approach="standard",B=500,sampleSize=200) #Test print messages.
 # prepareMethodParameters(approach="Clipper",B=20,sampleSize=200) #Test print messages.
 # prepareMethodParameters(approach="Clipper",B=10,sampleSize=500) #Test print messages.
-# prepareMethodParameters(approach="Clipper",B=200,sampleSize=500) #Test print messages.
 # prepareMethodParameters(approach="test",B=1000,sampleSize=500) #Test print messages.
 
 

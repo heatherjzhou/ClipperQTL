@@ -1,4 +1,4 @@
-#' ClipperQTL
+#' callSigGeneSNPPairs
 #'
 #' @export
 
@@ -6,19 +6,20 @@
 # #For code development only:
 # library(dplyr)
 # source("~/2022.03.14_ClipperQTL/ClipperQTL/R/2.1_prepareExprAndCovData.R")
-# source("~/2022.03.14_ClipperQTL/ClipperQTL/R/2.2_prepareSampleIndices.R")
-# source("~/2022.03.14_ClipperQTL/ClipperQTL/R/2.3_prepareChunkInfo.R")
-# source("~/2022.03.14_ClipperQTL/ClipperQTL/R/2.4_prepareMethodParameters.R")
-# source("~/2022.03.14_ClipperQTL/ClipperQTL/R/2.5_prepareDataGeneExpressionFPSub.R")
-#
-# source("~/2022.03.14_ClipperQTL/ClipperQTL/R/3.1_runChunk.R")
-# source("~/2022.03.14_ClipperQTL/ClipperQTL/R/3.2_combineChunks.R")
 
 
-ClipperQTL<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
-                     approach="standard",B=1000,
-                     cisDistance=1e6,MAFThreshold=0.01,MASamplesThreshold=10,
-                     numOfChunksTarget=100,seed=1,numOfCores=1){
+# ClipperQTL<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
+#                      approach="standard",B=1000,
+#                      cisDistance=1e6,MAFThreshold=0.01,MASamplesThreshold=10,
+#                      numOfChunksTarget=100,seed=1,numOfCores=1){
+
+
+#This function: save _resultSigGeneSNPPairs.rds.
+callSigGeneSNPPairs<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir, #Need to be the same as those used in ClipperQTL().
+                              approach="standard", #Need to be the same as that used ClipperQTL().
+                              cisDistance=1e6,MAFThreshold=0.01,MASamplesThreshold=10, #Need to be the same as those used in ClipperQTL().
+                              numOfCores=1,
+                              sigGeneSNPPairMethod=NULL,percent=NULL){ #sigGeneSNPPairMethod is "FastQTL" or "topPercent".
   # tissueType<-"Lung" #Sample size is 515.
   # numOfPCs<-44 #Chosen via BE.
   #
@@ -45,10 +46,7 @@ ClipperQTL<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
 
 
 
-  #Create output directory.
-  if(!dir.exists(outputDir)) dir.create(outputDir)
-
-  filename<-paste0(outputDir,"_log_ClipperQTL.txt")
+  filename<-paste0(outputDir,"_log_callSigGeneSNPPairs.txt")
   sink(file=filename,type="output") #Save print messages to this file. Messages sent to stderr() (including those from message, warning, and stop) do not go here.
 
   #Prepare dataGeneExpressionFP and dataCovariates.
@@ -63,20 +61,13 @@ ClipperQTL<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
   sampleIndices<-prepareSampleIndices(genotypeFile,tabixProgram,outputDir,
                                       sampleNames=colnames(dataGeneExpressionFP)[-(1:4)]) #Vector of length 515.
 
-  #Prepare chunkInfo.
-  cat("Partitioning genes into approximately",numOfChunksTarget,"chunks...\n")
-  chunkInfo<-prepareChunkInfo(dataGeneExpressionFP,numOfChunksTarget,outputDir) #103*4.
+  chunkInfo<-readRDS(paste0(outputDir,"_chunkInfo.rds"))
 
-  #Prepare method parameters.
-  temp<-prepareMethodParameters(approach,B,sampleSize=nrow(dataCovariates))
-  approach<-temp$approach #"standard" or "Clipper".
-  B<-temp$B
-  rm(temp)
+  cat("\nCalling significant gene-SNP pairs...\n") #Include a new line at the beginning of this print message to emphasize it.
 
-  #Run chunks. This creates resultChunk1.rds, resultChunk2.rds, etc.
+  #Run chunks.
   if(TRUE){
     RNGkind("L'Ecuyer-CMRG") #This is necessary to ensure reproducibility when using mclapply().
-    set.seed(seed) #For permutations.
     results<-parallel::mclapply(chunkInfo$indexOfChunk,FUN=function(indexOfChunk){ #parallel is a base package, so it doesn't need to be imported in the description file of the package.
       # indexOfChunk<-1 #To comment out.
 
@@ -99,26 +90,6 @@ ClipperQTL<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
     print(unlist(results)) #0 means success.
   }
 
-  #Save _resultCombined.rds.
-  cat("\nCombining results...\n") #Include a new line at the beginning of this print message to emphasize it.
-  resultCombined<-combineChunks(outputDir,chunkInfo)
-
-  #Save _resultGenes.rds.
-  cat("\nCalling eGenes...\n") #Include a new line at the beginning of this print message to emphasize it.
-  resultGenes<-callEGenes(resultCombined,approach,B,
-                          outputDir)
-
-  cat("\nClipperQTL finished running.\n") #Include a new line at the beginning of this print message to emphasize it.
-
   sink() #Close the connection.
+
 }
-
-
-
-
-
-
-
-
-
-

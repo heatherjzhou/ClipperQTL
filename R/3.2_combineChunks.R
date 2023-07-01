@@ -1,8 +1,7 @@
 
 
 combineChunks<-function(outputDir,chunkInfo){
-  # tissueType<-"Lung" #Sample size is 515.
-  # outputDir<-paste0("~/2022.03.14_ClipperQTL/ClipperQTL/test/2023.03.20_combineChunks/_result/",tissueType,"/")
+  # outputDir<-paste0("~/2022.03.14_ClipperQTL/ClipperQTL/test/2023.06.27_runPackage/_result/Lung/approach=Clipper_B=20/")
   # chunkInfo<-readRDS(paste0(outputDir,"_chunkInfo.rds")) #103*4.
   # #To comment out.
 
@@ -14,8 +13,8 @@ combineChunks<-function(outputDir,chunkInfo){
   chunkInfo<-chunkInfo[,c(1:5,7,6)] #Switch indexOfRowStart and indexOfRowEnd. This is unnecessary but may be helpful during code development.
   # identical(chunkInfo$indexOfRowEnd-chunkInfo$indexOfRowStart+1,chunkInfo$numOfGenesInChunk) #TRUE is good.
 
-  resultChunk1<-readRDS(paste0(outputDir,"resultChunk1.rds"))
-  resultCombined<-data.frame(matrix(nrow=numOfGenesTotal,ncol=ncol(resultChunk1)))
+  resultChunk1<-readRDS(paste0(outputDir,"resultChunk1.rds")) #257*25.
+  resultCombined<-data.frame(matrix(nrow=numOfGenesTotal,ncol=ncol(resultChunk1))) #26,095*25.
   colnames(resultCombined)<-colnames(resultChunk1)
 
   for(indexOfChunk in chunkInfo$indexOfChunk){
@@ -29,11 +28,11 @@ combineChunks<-function(outputDir,chunkInfo){
 
     resultCombined[indexOfRowStartCurr:indexOfRowEndCurr,]<-resultChunk
 
-    # unlink(pathResultChunk)
+    unlink(pathResultChunk)
   }
 
   pathResultCombined<-paste0(outputDir,"_resultCombined.rds")
   saveRDS(resultCombined,pathResultCombined)
 
-  # return(resultCombined) #26,095*25. The first four columns are chr, start, end, and gene_id. end is used as TSS.
+  return(resultCombined) #26,095*25. The first four columns are chr, start, end, and gene_id. end is used as TSS.
 }

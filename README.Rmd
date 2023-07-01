@@ -13,6 +13,8 @@ setwd("~/2022.03.14_ClipperQTL/ClipperQTL") #Set the working directory as the di
 
 ## 1. Installation
 
+Install qValue from Bioconductor and Clipper from GitHub.
+
 ```{r,eval=FALSE}
 #install.packages("devtools")
 devtools::install_github("heatherjzhou/ClipperQTL") #If prompted, make sure to update RcppArmadillo. Otherwise the installation of ClipperQTL will fail.
