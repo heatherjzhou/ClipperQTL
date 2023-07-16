@@ -5,7 +5,11 @@ getDataGenotypeCpp <- function(chrCurr, geneTSSs, genotypeFile, tabixProgram, te
     .Call(`_ClipperQTL_getDataGenotypeCpp`, chrCurr, geneTSSs, genotypeFile, tabixProgram, tempFileName, sampleIndices, cisDistance, MAFThreshold, MASamplesThreshold)
 }
 
-getTableMaxAbsCorsCpp <- function(Y, XRaw, dataCovariates, geneTSSs, SNPPositions, approach, B) {
-    .Call(`_ClipperQTL_getTableMaxAbsCorsCpp`, Y, XRaw, dataCovariates, geneTSSs, SNPPositions, approach, B)
+getTableMaxAbsCorsCpp <- function(Y, XRaw, dataCovariates, geneTSSs, SNPPositions, cisDistance, approach, B) {
+    .Call(`_ClipperQTL_getTableMaxAbsCorsCpp`, Y, XRaw, dataCovariates, geneTSSs, SNPPositions, cisDistance, approach, B)
+}
+
+saveTemporaryResultFilesCpp <- function(Y, X, dataCovariates, geneTSSs, SNPPositions, cisDistance, sigGeneSNPPairMethod, absCorThresholds, percent, indexOfChunk, outputDirChunk) {
+    .Call(`_ClipperQTL_saveTemporaryResultFilesCpp`, Y, X, dataCovariates, geneTSSs, SNPPositions, cisDistance, sigGeneSNPPairMethod, absCorThresholds, percent, indexOfChunk, outputDirChunk)
 }
 

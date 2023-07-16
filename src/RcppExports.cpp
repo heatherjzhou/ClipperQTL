@@ -31,8 +31,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // getTableMaxAbsCorsCpp
-arma::mat getTableMaxAbsCorsCpp(const arma::mat Y, const arma::mat XRaw, const arma::mat dataCovariates, const arma::vec geneTSSs, const arma::vec SNPPositions, const std::string approach, const int B);
-RcppExport SEXP _ClipperQTL_getTableMaxAbsCorsCpp(SEXP YSEXP, SEXP XRawSEXP, SEXP dataCovariatesSEXP, SEXP geneTSSsSEXP, SEXP SNPPositionsSEXP, SEXP approachSEXP, SEXP BSEXP) {
+arma::mat getTableMaxAbsCorsCpp(const arma::mat Y, const arma::mat XRaw, const arma::mat dataCovariates, const arma::vec geneTSSs, const arma::vec SNPPositions, const int cisDistance, const std::string approach, const int B);
+RcppExport SEXP _ClipperQTL_getTableMaxAbsCorsCpp(SEXP YSEXP, SEXP XRawSEXP, SEXP dataCovariatesSEXP, SEXP geneTSSsSEXP, SEXP SNPPositionsSEXP, SEXP cisDistanceSEXP, SEXP approachSEXP, SEXP BSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -41,16 +41,39 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::mat >::type dataCovariates(dataCovariatesSEXP);
     Rcpp::traits::input_parameter< const arma::vec >::type geneTSSs(geneTSSsSEXP);
     Rcpp::traits::input_parameter< const arma::vec >::type SNPPositions(SNPPositionsSEXP);
+    Rcpp::traits::input_parameter< const int >::type cisDistance(cisDistanceSEXP);
     Rcpp::traits::input_parameter< const std::string >::type approach(approachSEXP);
     Rcpp::traits::input_parameter< const int >::type B(BSEXP);
-    rcpp_result_gen = Rcpp::wrap(getTableMaxAbsCorsCpp(Y, XRaw, dataCovariates, geneTSSs, SNPPositions, approach, B));
+    rcpp_result_gen = Rcpp::wrap(getTableMaxAbsCorsCpp(Y, XRaw, dataCovariates, geneTSSs, SNPPositions, cisDistance, approach, B));
+    return rcpp_result_gen;
+END_RCPP
+}
+// saveTemporaryResultFilesCpp
+int saveTemporaryResultFilesCpp(const arma::mat Y, const arma::mat X, const arma::mat dataCovariates, const arma::vec geneTSSs, const arma::vec SNPPositions, const int cisDistance, const std::string sigGeneSNPPairMethod, const arma::vec absCorThresholds, const double percent, const int indexOfChunk, const std::string outputDirChunk);
+RcppExport SEXP _ClipperQTL_saveTemporaryResultFilesCpp(SEXP YSEXP, SEXP XSEXP, SEXP dataCovariatesSEXP, SEXP geneTSSsSEXP, SEXP SNPPositionsSEXP, SEXP cisDistanceSEXP, SEXP sigGeneSNPPairMethodSEXP, SEXP absCorThresholdsSEXP, SEXP percentSEXP, SEXP indexOfChunkSEXP, SEXP outputDirChunkSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::mat >::type dataCovariates(dataCovariatesSEXP);
+    Rcpp::traits::input_parameter< const arma::vec >::type geneTSSs(geneTSSsSEXP);
+    Rcpp::traits::input_parameter< const arma::vec >::type SNPPositions(SNPPositionsSEXP);
+    Rcpp::traits::input_parameter< const int >::type cisDistance(cisDistanceSEXP);
+    Rcpp::traits::input_parameter< const std::string >::type sigGeneSNPPairMethod(sigGeneSNPPairMethodSEXP);
+    Rcpp::traits::input_parameter< const arma::vec >::type absCorThresholds(absCorThresholdsSEXP);
+    Rcpp::traits::input_parameter< const double >::type percent(percentSEXP);
+    Rcpp::traits::input_parameter< const int >::type indexOfChunk(indexOfChunkSEXP);
+    Rcpp::traits::input_parameter< const std::string >::type outputDirChunk(outputDirChunkSEXP);
+    rcpp_result_gen = Rcpp::wrap(saveTemporaryResultFilesCpp(Y, X, dataCovariates, geneTSSs, SNPPositions, cisDistance, sigGeneSNPPairMethod, absCorThresholds, percent, indexOfChunk, outputDirChunk));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
     {"_ClipperQTL_getDataGenotypeCpp", (DL_FUNC) &_ClipperQTL_getDataGenotypeCpp, 9},
-    {"_ClipperQTL_getTableMaxAbsCorsCpp", (DL_FUNC) &_ClipperQTL_getTableMaxAbsCorsCpp, 7},
+    {"_ClipperQTL_getTableMaxAbsCorsCpp", (DL_FUNC) &_ClipperQTL_getTableMaxAbsCorsCpp, 8},
+    {"_ClipperQTL_saveTemporaryResultFilesCpp", (DL_FUNC) &_ClipperQTL_saveTemporaryResultFilesCpp, 11},
     {NULL, NULL, 0}
 };
 

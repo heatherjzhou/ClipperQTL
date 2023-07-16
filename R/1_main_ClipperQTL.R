@@ -10,13 +10,11 @@
 # source("~/2022.03.14_ClipperQTL/ClipperQTL/R/2.3_prepareChunkInfo.R")
 # source("~/2022.03.14_ClipperQTL/ClipperQTL/R/2.4_prepareMethodParameters.R")
 # source("~/2022.03.14_ClipperQTL/ClipperQTL/R/2.5_prepareDataGeneExpressionFPSub.R")
-#
-# source("~/2022.03.14_ClipperQTL/ClipperQTL/R/3.1_runChunk.R")
-# source("~/2022.03.14_ClipperQTL/ClipperQTL/R/3.2_combineChunks.R")
+
 
 
 ClipperQTL<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
-                     approach="standard",B=1000,
+                     approach="standard",B=1000, #approach is "standard" or "Clipper".
                      cisDistance=1e6,MAFThreshold=0.01,MASamplesThreshold=10,
                      numOfChunksTarget=100,seed=1,numOfCores=1){
   # tissueType<-"Lung" #Sample size is 515.
@@ -31,8 +29,8 @@ ClipperQTL<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
   # outputDir<-paste0("~/2022.03.14_ClipperQTL/ClipperQTL/R/_temp/",tissueType,"/")
   # rm(tissueType,numOfPCs)
   #
-  # approach<-"Clipper" #Use this to make testing faster.
-  # B<-20 #Use this to make testing faster.
+  # approach<-"standard"
+  # B<-1000
   #
   # cisDistance<-1e6
   # MAFThreshold<-0.01
@@ -99,7 +97,7 @@ ClipperQTL<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
     print(unlist(results)) #0 means success.
   }
 
-  #Save _resultCombined.rds.
+  #Save _resultCombined.rds (to be deleted in the next step).
   cat("\nCombining results...\n") #Include a new line at the beginning of this print message to emphasize it.
   resultCombined<-combineChunks(outputDir,chunkInfo)
 
@@ -108,7 +106,7 @@ ClipperQTL<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
   resultGenes<-callEGenes(resultCombined,approach,B,
                           outputDir)
 
-  cat("\nClipperQTL finished running.\n") #Include a new line at the beginning of this print message to emphasize it.
+  cat("\nClipperQTL() finished running.\n") #Include a new line at the beginning of this print message to emphasize it.
 
   sink() #Close the connection.
 }

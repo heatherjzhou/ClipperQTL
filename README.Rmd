@@ -13,7 +13,9 @@ setwd("~/2022.03.14_ClipperQTL/ClipperQTL") #Set the working directory as the di
 
 ## 1. Installation
 
-Install qValue from Bioconductor and Clipper from GitHub.
+#This package is only maintained for use in Linux (not Windows or macOS).
+
+#Install qValue from Bioconductor and Clipper from GitHub before installing this package.
 
 ```{r,eval=FALSE}
 #install.packages("devtools")

@@ -19,17 +19,19 @@ mat getDesignMatrix(const mat X){
 //dataCovariates, the sample by covariate covariate matrix (without a column of ones),
 //geneTSSs, the vector of gene TSSs, corresponding to the rows of Y,
 //SNPPositions, the vector of SNP positions, corresponding to the rows of X,
+//cisDistance,
 //approach,
 //and B,
 //get tableMaxAbsCors.
 //[[Rcpp::export()]]
 arma::mat getTableMaxAbsCorsCpp(const arma::mat Y,
-                          const arma::mat XRaw, //To be residualized.
-                          const arma::mat dataCovariates,
-                          const arma::vec geneTSSs,
-                          const arma::vec SNPPositions,
-                          const std::string approach,
-                          const int B){
+                                const arma::mat XRaw, //To be residualized.
+                                const arma::mat dataCovariates,
+                                const arma::vec geneTSSs,
+                                const arma::vec SNPPositions,
+                                const int cisDistance,
+                                const std::string approach,
+                                const int B){
 
   //Create tableMaxAbsCors. To be filled and returned.
   mat tableMaxAbsCors(Y.n_rows,1+B); //257*21. Each row corresponds to a gene. The columns are: exp, bg1, ..., bg20.
@@ -71,7 +73,7 @@ arma::mat getTableMaxAbsCorsCpp(const arma::mat Y,
   //Using two steps instead of only one step reduces the runtime by about 4 seconds.
   //Ensuring that the smaller matrices are multiplied together first in the calculation of coef_T reduces the runtime slightly.
   mat coef_T=XRaw*(D*(D.t()*D).i());
-  mat X=XRaw-coef_T*D.t();
+  mat X=XRaw-coef_T*D.t(); //131,682*515.
 
   //Given YCube and X, fill tableMaxAbsCors.
   for(int indexOfGene=0;indexOfGene<Y.n_rows;indexOfGene++){
@@ -80,7 +82,7 @@ arma::mat getTableMaxAbsCorsCpp(const arma::mat Y,
 
     //Get XSub.
     int geneTSS=geneTSSs(indexOfGene); //75,786,699.
-    uvec indicesOfSNPs=find(abs(SNPPositions-geneTSS)<=1e6); //"u" stands for unsigned integer.
+    uvec indicesOfSNPs=find(abs(SNPPositions-geneTSS)<=cisDistance); //"u" stands for unsigned integer.
     mat XSub=X.rows(indicesOfSNPs); //7261*515.
 
     //Calculate absCorMatrix.

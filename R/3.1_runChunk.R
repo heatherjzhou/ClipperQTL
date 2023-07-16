@@ -66,6 +66,8 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
   if(TRUE){
     timeStart<-Sys.time()
 
+    cat("Obtaining genotype data for Chunk ",indexOfChunk,"...\n",sep="")
+
     dataGenotype<-getDataGenotypeCpp(chrCurr=dataGeneExpressionFPSub$chr[1],geneTSSs,genotypeFile,tabixProgram,tempFileName=tempfile(),
                                      sampleIndices,cisDistance,MAFThreshold,MASamplesThreshold) #A list of two items: SNPInfo and X.
 
@@ -83,15 +85,18 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
   # sum(abs(SNPPositions-geneTSSs[1])<=1e6) #7261 local common SNPs for the first gene in Chunk 5 of Lung. Matches FastQTL.
   # sum(abs(SNPPositions-geneTSSs[2])<=1e6) #7278 local common SNPs for the second gene in Chunk 5 of Lung. Matches FastQTL.
 
-  #Get tableMaxAbsCors. This takes about 16 or 24 seconds, depending on conditions. Longer as of 2023/07/01.
+  #Get tableMaxAbsCors. This takes about 16 or 24 seconds, depending on conditions. Takes longer as of 2023/07/01.
   if(TRUE){
     timeStart<-Sys.time()
+
+    cat("Calculating maximum absolute correlations for Chunk ",indexOfChunk,"...\n",sep="")
 
     tableMaxAbsCors<-getTableMaxAbsCorsCpp(Y, #257*515.
                                            X, #131,682*515.
                                            dataCovariates, #515*52.
                                            geneTSSs, #Vector of length 257.
                                            SNPPositions, #Vector of length 131,682.
+                                           cisDistance,
                                            approach,
                                            B
                                            ) #257*21. Each row corresponds to a gene. The columns are: exp, bg1, ..., bg20.
@@ -108,7 +113,6 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
   #Save resultChunk.
   path<-paste0(outputDir,"resultChunk",indexOfChunk,".rds") #resultChunk5.rds.
   saveRDS(resultChunk,path)
-
 }
 
 

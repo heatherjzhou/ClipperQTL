@@ -1,8 +1,8 @@
 
 
 
-runEGenes<-function(resultCombined,approach,B,
-                    outputDir){
+callEGenes<-function(resultCombined,approach,B,
+                     outputDir){
 
   if(approach=="standard"){
     # resultCombined<-readRDS("~/2022.03.14_ClipperQTL/ClipperQTL/test/2023.06.27_runPackage/_result/Lung/approach=standard_B=1000/_resultCombined.rds")
@@ -21,7 +21,7 @@ runEGenes<-function(resultCombined,approach,B,
 
     resultCombined$pValue<-(numsOfPermsMoreSig+1)/(B+1) #pValue is calculated as (X+1)/(Y+1).
     resultCombined$qValue<-qvalue::qvalue(resultCombined$pValue)$qvalues
-    # eGenes<-(resultCombined%>%filter(qValue<=0.05))$gene_id #13,629 eGenes identified.
+    # eGenes<-(resultCombined%>%filter(qValue<=0.05))$gene_id
 
   }else if(approach=="Clipper"){
     # resultCombined<-readRDS("~/2022.03.14_ClipperQTL/ClipperQTL/test/2023.06.27_runPackage/_result/Lung/approach=Clipper_B=20/_resultCombined.rds")
@@ -46,11 +46,12 @@ runEGenes<-function(resultCombined,approach,B,
                            n.permutation=h)
     resultCombined$contrastScore<-temp$contrast.score.value
     resultCombined$qValue<-temp$q
-    # eGenes<-(resultCombined%>%filter(qValue<=0.05))$gene_id #14,094 eGenes identified.
+    # eGenes<-(resultCombined%>%filter(qValue<=0.05))$gene_id
   }
 
   pathResultGenes<-paste0(outputDir,"_resultGenes.rds")
   saveRDS(resultCombined,pathResultGenes)
+  unlink(paste0(outputDir,"_resultCombined.rds"))
 
   return(resultCombined) #26,095*27. The first four columns are chr, start, end, and gene_id. end is used as TSS. The last column is qValue.
 }
