@@ -12,9 +12,9 @@ prepareExprAndCovData<-function(exprFile,covFile){
   # #To comment out.
 
   dataGeneExpressionFP<-readr::read_delim(exprFile,delim="\t",escape_double=FALSE,trim_ws=TRUE) #Import from text (base) does not work. Import from text (readr) works.
-  colnames(dataGeneExpressionFP)[1]<-"chr" #26,095*519. The first four columns are chr, start, end, and gene_id. end is used as TSS.
+  colnames(dataGeneExpressionFP)[1:4]<-c("chr","start","end","gene_id") #26,095*519. The first four columns are chr, start, end, and gene_id. end is used as TSS.
 
-  dataCovariatesRaw<-readr::read_delim(covFile,delim="\t",escape_double=FALSE,trim_ws=TRUE) #52*516. The first column is covariate ID. Import from text (base) does not work. Import from text (readr) works.
+  dataCovariatesRaw<-readr::read_delim(covFile,delim="\t",escape_double=FALSE,trim_ws=TRUE) #52*516. The first column is the covariate ID. Import from text (base) does not work. Import from text (readr) works.
   if(!identical(colnames(dataGeneExpressionFP)[-(1:4)],colnames(dataCovariatesRaw)[-1])){
     stop("Sample names do not match between the expression file and the covariate file.\n")
   }

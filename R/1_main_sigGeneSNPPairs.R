@@ -1,9 +1,49 @@
+#' @title
 #' callSigGeneSNPPairs
 #'
-#' @param sigGeneSNPPairMethod If approach is standard, then sigGeneSNPPairMethod can be either "FastQTL" or "topPercent" (default is "FastQTL"). If approach is Clipper, then sigGeneSNPPairMethod can only be "topPercent".
-#' @param outputDir Must be recognizable in C++. "~" may not be recognized as the home directory in C++; spell out the directory name instead.
-#' @param percent Between 0 and 100. For example, 1 means the top 1% SNPs for each eGene are outputted.
+#' @description
+#' This function is used for identifying significant gene-SNP pairs.
+#'
+#' @details
+#' Most arguments in this function (from \code{exprFile} to \code{MASamplesThreshold}) must be the same as those used in \code{ClipperQTL()}. However, since \code{outputDir} will be used in C++ in this function, it must be recognizable in C++ (see above).
+#'
+#' The main method parameters of \code{callSigGeneSNPPairs()} are \code{sigGeneSNPPairMethod} and \code{percent}. \code{sigGeneSNPPairMethod} must be \code{"FastQTL"}, \code{"topPercent"}, or \code{NULL}. \code{percent} is only relevant if \code{"topPercent"} is used.
+#'
+#' If \code{sigGeneSNPPairMethod="FastQTL"}, then significant gene-SNP pairs will be identified using the method in FastQTL (see Algorithm S2 of reference; inverse functions of cumulative distribution functions are replaced by quantile functions).
+#'
+#' If \code{sigGeneSNPPairMethod="topPercent"}, then the top 1\% local common SNPs (in terms of significance of association) will be identified as significant for each eGene (if \code{percent=1}, that is).
+#'
+#' If \code{sigGeneSNPPairMethod=NULL}, then if \code{approach="standard"}, \code{sigGeneSNPPairMethod} will be set to \code{"FastQTL"}; if \code{approach="Clipper"}, \code{sigGeneSNPPairMethod} will be set to \code{"topPercent"}.
+#'
+#' If \code{approach="standard"}, then \code{sigGeneSNPPairMethod} can be either \code{"FastQTL"} or \code{"topPercent"}. If \code{approach="Clipper"}, then \code{sigGeneSNPPairMethod} cannot be \code{"FastQTL"}.
+#'
+#' \code{callSigGeneSNPPairs()} outputs several files in the output directory. The most important one is named "_resultSigGeneSNPPairs_FastQTL.rds" or "_resultSigGeneSNPPairs_topPercent.rds" (depending on \code{sigGeneSNPPairMethod}), which can be read into R with \code{readRDS()}. Each row corresponds to a significant gene-SNP pair.
+#'
+#' @param exprFile Must be the same as \code{exprFile} in \code{ClipperQTL()}.
+#' @param covFile Must be the same as \code{covFile} in \code{ClipperQTL()}.
+#' @param genotypeFile Must be the same as \code{genotypeFile} in \code{ClipperQTL()}.
+#' @param tabixProgram Must be the same as \code{tabixProgram} in \code{ClipperQTL()}.
+#' @param outputDir Must be the same as \code{outputDir} in \code{ClipperQTL()}. Must be recognizable in C++. "~" may not be recognized as the home directory in C++; the user may need to spell out the directory name instead.
+#'
+#' @param approach Must be the same as \code{approach} in \code{ClipperQTL()} (\code{"standard"} or \code{"Clipper"}). Helps determine \code{sigGeneSNPPairMethod}.
+#'
+#' @param cisDistance Must be the same as \code{cisDistance} in \code{ClipperQTL()}.
+#' @param MAFThreshold Must be the same as \code{MAFThreshold} in \code{ClipperQTL()}.
+#' @param MASamplesThreshold Must be the same as \code{MASamplesThreshold} in \code{ClipperQTL()}.
+#'
+#' @param numOfCores The number of cores to be used. Default is \code{1}.
+#'
+#' @param FDR_eGene The target FDR for eGene identification. Default is \code{0.05}.
+#' @param sigGeneSNPPairMethod Key argument. Must be \code{"FastQTL"}, \code{"topPercent"}, or \code{NULL}. See below.
+#' @param percent Key argument. Only relevant if \code{"topPercent"} is used. Default is \code{1}, which means the top 1\% local common SNPs (in terms of significance of association) will be identified as significant for each eGene. See below.
+#'
+#' @references
+#' Heather J. Zhou, Xinzhou Ge, and Jingyi Jessica Li. ClipperQTL: ultrafast and powerful eGene identification method. bioRxiv, 2023.
+#'
 #' @export
+
+
+
 
 
 # #For code development only:
@@ -16,11 +56,11 @@
 
 
 
-callSigGeneSNPPairs<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir, #Need to be the same as those used in ClipperQTL().
-                              approach, #Needs to be the same as approach in ClipperQTL(). Helps determine sigGeneSNPPairMethod.
-                              cisDistance=1e6,MAFThreshold=0.01,MASamplesThreshold=10, #Need to be the same as those used in ClipperQTL().
+callSigGeneSNPPairs<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir, #Must be the same as those used in ClipperQTL().
+                              approach, #Must be the same as approach in ClipperQTL(). Helps determine sigGeneSNPPairMethod.
+                              cisDistance=1e6,MAFThreshold=0.01,MASamplesThreshold=10, #Must be the same as those used in ClipperQTL().
                               numOfCores=1,
-                              FDR_eGene=0.05,sigGeneSNPPairMethod=NULL,percent=1){ #sigGeneSNPPairMethod is "FastQTL" or "topPercent". percent is only relevant when using "topPercent".
+                              FDR_eGene=0.05,sigGeneSNPPairMethod=NULL,percent=1){ #sigGeneSNPPairMethod must be "FastQTL", "topPercent", or NULL. percent is only relevant if "topPercent" is used.
   # tissueType<-"Lung" #Sample size is 515.
   # numOfPCs<-44 #Chosen via BE.
   #
@@ -45,6 +85,8 @@ callSigGeneSNPPairs<-function(exprFile,covFile,genotypeFile,tabixProgram,outputD
   # sigGeneSNPPairMethod<-NULL
   # percent<-1
   # #To comment out.
+
+
 
   #Prepare parameters for calling significant gene-SNP pairs (do this here so that sigGeneSNPPairMethod can be used to name the log file. Stop messages are not diverted by sink() anyways).
   temp<-prepareSigGeneSNPPairsParameters(approach,sigGeneSNPPairMethod,percent)
@@ -140,5 +182,8 @@ callSigGeneSNPPairs<-function(exprFile,covFile,genotypeFile,tabixProgram,outputD
   cat("\ncallSigGeneSNPPairs() finished running.\n") #Include a new line at the beginning of this print message to emphasize it.
 
   sink() #Close the connection.
-
 }
+
+
+
+
