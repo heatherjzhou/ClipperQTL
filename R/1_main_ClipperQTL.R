@@ -1,6 +1,50 @@
+#' @title
 #' ClipperQTL
 #'
+#' @description
+#' This function is used for identifying eGenes.
+#'
+#' @details
+#' \code{ClipperQTL()} requires three main pieces of input data: expression data, covariate data, and genotype data. The file paths are specified by \code{exprFile}, \code{covFile}, and \code{genotypeFile}, respectively. All three data sets must have the same format as the data sets used in GTEx V8 analysis.
+#'
+#' Specifically, the expression file must be a .bed.gz file. The first four columns must be chr, start, end, and gene_id (the exact column names do not matter). Each remaining column must correspond to a sample. The third column, end, will be used as the transcription start site (following FastQTL). The second column, start, will not be used.
+#'
+#' The covariate file must be a .txt file. The first column must be the covariate ID (the exact column name does not matter). Each remaining column must correspond to a sample. All constant covariates will be filtered out before analysis.
+#'
+#' The genotype file must be a .vcf.gz file. The non-empty genotype entries must be "0|0", "0|1", "1|0", or "1|1". The missing genotype entries will be imputed as within-SNP averages. This file can contain more samples than the expression file and the covariate file (which must have the same samples).
+#'
+#' The main method parameters of \code{ClipperQTL()} are \code{approach} and \code{B}. \code{approach} must be \code{"standard"} or \code{"Clipper"}, corresponding to the standard variant and the Clipper variant of ClipperQTL (see reference). The default is \code{approach="standard"} and \code{B=1000}. If the sample size is greater than 450, then the user may use \code{approach="Clipper"} and \code{B} between 20 and 100 for faster computational speed. If \code{approach="Clipper"} and \code{B=NULL}, then \code{B} will be set to 20.
+#'
+#' \code{ClipperQTL()} outputs several files in the output directory. The most important one is named "_resultGenes.rds", which can be read into R with \code{readRDS()}. The first four columns are identical to the first four columns in the expression file. The next \code{B+1} columns are the maximum absolute correlations from the experimental round and the permutation rounds. The eGenes are those with \code{qValue} (the last column) under the target FDR threshold, e.g., 0.05.
+#'
+#' @param exprFile The directory and filename of the expression file (.bed.gz file; see below).
+#' @param covFile The directory and filename of the covariate file (.txt file; see below).
+#' @param genotypeFile The directory and filename of the genotype file (.vcf.gz file; see below).
+#' @param tabixProgram The directory and filename of the tabix executable file.
+#' @param outputDir The output directory (ending with "/").
+#'
+#' @param approach Key argument. Must be \code{"standard"} or \code{"Clipper"}. See below.
+#' @param B Key argument. The number of permutations. See below.
+#'
+#' @param cisDistance The maximum distance between a SNP and the transcription start site of a gene for the SNP to be considered local for the gene. Default is \code{1e6}.
+#' @param MAFThreshold The threshold for the minor allele frequency (MAF) of a SNP. Default is \code{0.01}.
+#' @param MASamplesThreshold The threshold for the number of samples with at least one copy of the minor allele (MA samples). Default is \code{10}.
+#'
+#' @param numOfChunksTarget The target number chunks that all genes in the expression file will be divided into. Default is \code{100}.
+#' @param seed The seed. Default is \code{1}.
+#' @param numOfCores The number of cores to be used. Default is \code{1}.
+#'
+#' @references
+#' Heather J. Zhou, Xinzhou Ge, and Jingyi Jessica Li. ClipperQTL: ultrafast and powerful eGene identification method. bioRxiv, 2023.
+#'
+#' GTEx Consortium. The GTEx Consortium atlas of genetic regulatory effects across human tissues. Science, 369(6509):1318–1330, 2020.
+#'
+#' Halit Ongen, Alfonso Buil, Andrew Anand Brown, Emmanouil T. Dermitzakis, and Olivier Delaneau. Fast and efficient QTL mapper for thousands of molecular phenotypes. Bioinformatics, 32(10):1479–1485, 2016.
+#'
 #' @export
+
+
+
 
 
 # #For code development only:
@@ -14,7 +58,7 @@
 
 
 ClipperQTL<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
-                     approach="standard",B=1000, #approach is "standard" or "Clipper".
+                     approach="standard",B=1000, #approach must be "standard" or "Clipper".
                      cisDistance=1e6,MAFThreshold=0.01,MASamplesThreshold=10,
                      numOfChunksTarget=100,seed=1,numOfCores=1){
   # tissueType<-"Lung" #Sample size is 515.
@@ -110,12 +154,6 @@ ClipperQTL<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
 
   sink() #Close the connection.
 }
-
-
-
-
-
-
 
 
 
