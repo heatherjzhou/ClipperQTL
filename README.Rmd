@@ -41,7 +41,11 @@ The ClipperQTL package contains two main functions: `ClipperQTL()` for identifyi
 
 `ClipperQTL()` requires three main pieces of input data: expression data, covariate data, and genotype data. The file paths are specified by `exprFile`, `covFile`, and `genotypeFile`, respectively. All three data sets must have the same format as the data sets used in GTEx V8 analysis [-@gtexconsortiumGTExConsortiumAtlas2020] (https://gtexportal.org/home/datasets).
 
+<<<<<<< HEAD
 Specifically, the expression file must be a .bed.gz file. The first four columns must be chr, start, end, and gene_id (the exact column names do not matter). Each remaining column must correspond to a sample. The third column, end, will be used as the transcription start site (following FastQTL; so make sure to put the desired transcription start site in this column). The second column, start, will not be used. An example expression file is provided in the folder named "example" in this repository. This file is downloaded from https://gtexportal.org/home/datasets.
+=======
+Specifically, the expression file must be a .bed.gz file. The first four columns must be chr, start, end, and gene_id (the exact column names do not matter). Each remaining column must correspond to a sample. The third column, end, will be used as the transcription start site (following FastQTL). The second column, start, will not be used. An example expression file is provided in the folder named "example" in this repository. This file is downloaded from https://gtexportal.org/home/datasets.
+>>>>>>> 6db33697c20474b6d1b0976533aae00919611560
 
 ```{r,eval=FALSE}
 #Take a look at the example expression file.
@@ -50,7 +54,11 @@ exprFile<-"~/2022.03.14_ClipperQTL/ClipperQTL/example/Whole_Blood.v8.normalized_
 temp1<-readr::read_delim(exprFile,delim="\t",escape_double=FALSE,trim_ws=TRUE) #20,315*674. Sample size is 670.
 ```
 
+<<<<<<< HEAD
 The covariate file must be a .txt file. The first column must be the covariate ID (the exact column name does not matter). Each remaining column must correspond to a sample. All constant covariates will be filtered out before analysis. An example covariate file is provided in the folder named "example" in this repository. The known covariates are obtained from https://gtexportal.org/home/datasets. The inferred covariates are the top expression PCs [-@zhouPCAOutperformsPopular2022b], and the number of PCs is chosen via the Buja and Eyuboglu (BE) algorithm using PCAForQTL (https://github.com/heatherjzhou/PCAForQTL) [-@zhouPCAOutperformsPopular2022b; -@bujaRemarksParallelAnalysis1992]. We use the BE algorithm because we find that in our simulated data, the BE algorithm can recover the true number of covariates well.
+=======
+The covariate file must be a .txt file. The first column must be the covariate ID (the exact column name does not matter). Each remaining column must correspond to a sample. All constant covariates will be filtered out before analysis. An example covariate file is provided in the folder named "example" in this repository. The known covariates are obtained from https://gtexportal.org/home/datasets. The inferred covariates are the top expression PCs, and the number of PCs is chosen via the Buja and Eyuboglu (BE) algorithm using PCAForQTL (https://github.com/heatherjzhou/PCAForQTL) [-@zhouPCAOutperformsPopular2022b; -@bujaRemarksParallelAnalysis1992]. We use the BE algorithm because we find that in our simulated data, the BE algorithm can recover the true number of covariates well.
+>>>>>>> 6db33697c20474b6d1b0976533aae00919611560
 
 ```{r,eval=FALSE}
 #Take a look at the example covariate file.
@@ -77,6 +85,7 @@ tabixProgram<-"~/_Applications/htslib-1.10.2/bin/tabix"
 approach<-"standard"
 B<-1000
 
+<<<<<<< HEAD
 # #Alternatively, use the Clipper variant of ClipperQTL for faster computational speed (only recommended for data sets with sample size greater than 450).
 # approach<-"Clipper"
 # B<-20 #B between 20 and 100 is recommended.
@@ -89,6 +98,20 @@ ClipperQTL(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
            approach,B,
            cisDistance=1e6,MAFThreshold=0.01,MASamplesThreshold=10,
            numOfChunksTarget=100,seed=1,numOfCores=5)
+=======
+# #Alternatively, use the Clipper variant of ClipperQTL (only recommended for data sets with sample size greater than 450).
+# approach<-"Clipper"
+# B<-20 #B between 20 and 100 is recommended.
+
+outputDir<-paste0("~/2022.03.14_ClipperQTL/ClipperQTL/example/","approach=",approach,"_B=",B,"/")
+if(!dir.exists(outputDir)) dir.create(outputDir)
+
+ClipperQTL::ClipperQTL(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
+                       approach,B,
+                       cisDistance=1e6,MAFThreshold=0.01,MASamplesThreshold=10,
+                       numOfChunksTarget=100,seed=1,numOfCores=1)
+
+>>>>>>> 6db33697c20474b6d1b0976533aae00919611560
 ```
 
 
@@ -112,6 +135,14 @@ If `approach="standard"`, then `sigGeneSNPPairMethod` can be either `"FastQTL"` 
 ```{r,eval=FALSE}
 #Example code.
 
+<<<<<<< HEAD
+=======
+exprFile<-"~/2022.03.14_ClipperQTL/ClipperQTL/example/Whole_Blood.v8.normalized_expression.bed.gz"
+covFile<-"~/2022.03.14_ClipperQTL/ClipperQTL/example/Whole_Blood.v8.covariates.txt"
+genotypeFile<-"~/_Data/2020.09.21_GTEx_V8/1_Raw/GTEx_Analysis_2017-06-05_v8_WGS_VCF_files/GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.SHAPEIT2_phased.MAF01.vcf.gz"
+tabixProgram<-"~/_Applications/htslib-1.10.2/bin/tabix"
+
+>>>>>>> 6db33697c20474b6d1b0976533aae00919611560
 #Follow up with the standard variant of ClipperQTL.
 approach<-"standard"
 B<-1000
@@ -120,6 +151,7 @@ B<-1000
 # approach<-"Clipper"
 # B<-20
 
+<<<<<<< HEAD
 outputDir<-paste0("/home/heatherjzhou/2022.03.14_ClipperQTL/ClipperQTL/example/Whole_Blood_","approach=",approach,"_B=",B,"/") #"~" may not be recognized as the home directory in C++; you may need to spell out the directory name instead.
 
 callSigGeneSNPPairs(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
@@ -130,6 +162,18 @@ callSigGeneSNPPairs(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
 ```
 
 Note that `callSigGeneSNPPairs()` only provides a rudimentary analysis of significant gene-SNP pairs. For a more careful analysis, you may try fine-mapping methods such as SuSiE [-@wangSimpleNewApproach2020].
+=======
+outputDir<-paste0("/home/heatherjzhou/2022.03.14_ClipperQTL/ClipperQTL/example/","approach=",approach,"_B=",B,"/") #"~" may not be recognized as the home directory in C++; you may need to spell out the directory name instead.
+
+ClipperQTL::callSigGeneSNPPairs(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
+                                approach,
+                                cisDistance=1e6,MAFThreshold=0.01,MASamplesThreshold=10,
+                                numOfCores=1,
+                                FDR_eGene=0.05,sigGeneSNPPairMethod=NULL,percent=1) #Let the function choose sigGeneSNPPairMethod automatically.
+```
+
+Note that this function only provides a rudimentary analysis of significant gene-SNP pairs. For a more careful analysis, you may try fine-mapping methods such as SuSiE [-@wangSimpleNewApproach2020].
+>>>>>>> 6db33697c20474b6d1b0976533aae00919611560
 
 
 
