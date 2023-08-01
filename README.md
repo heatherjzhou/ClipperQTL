@@ -183,7 +183,7 @@ callSigGeneSNPPairs(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
 ```
 
 Note that `callSigGeneSNPPairs()` only provides a rudimentary analysis
-of significant gene-SNP pairs. For a more careful analysis, you may try
+of significant gene-SNP pairs. For a more in-depth analysis, you may try
 fine-mapping methods such as SuSiE (2020).
 
 ## Citation
