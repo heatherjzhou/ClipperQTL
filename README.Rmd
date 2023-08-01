@@ -8,6 +8,7 @@ nocite: |
   
   @zhouPCAOutperformsPopular2022b
   @bujaRemarksParallelAnalysis1992
+  
   @wangSimpleNewApproach2020
 ---
 
@@ -129,7 +130,7 @@ callSigGeneSNPPairs(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
                     FDR_eGene=0.05,sigGeneSNPPairMethod=NULL,percent=1) #Let the function choose sigGeneSNPPairMethod automatically.
 ```
 
-Note that `callSigGeneSNPPairs()` only provides a rudimentary analysis of significant gene-SNP pairs. For a more careful analysis, you may try fine-mapping methods such as SuSiE [-@wangSimpleNewApproach2020].
+Note that `callSigGeneSNPPairs()` only provides a rudimentary analysis of significant gene-SNP pairs. For a more in-depth analysis, you may try fine-mapping methods such as SuSiE [-@wangSimpleNewApproach2020].
 
 
 
