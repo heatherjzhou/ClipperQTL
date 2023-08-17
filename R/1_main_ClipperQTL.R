@@ -5,7 +5,7 @@
 #' This function is used for identifying eGenes.
 #'
 #' @details
-#' \code{ClipperQTL()} requires three main pieces of input data: expression data, covariate data, and genotype data. The file paths are specified by \code{exprFile}, \code{covFile}, and \code{genotypeFile}, respectively. All three data sets must have the same format as the data sets used in GTEx V8 analysis.
+#' \code{ClipperQTL()} requires three main pieces of input data: expression data, covariate data, and genotype data (the file paths are specified by \code{exprFile}, \code{covFile}, and \code{genotypeFile}, respectively). All three data sets must have the same format as the data sets used in GTEx V8 analysis.
 #'
 #' Specifically, the expression file must be a .bed.gz file. The first four columns must be chr, start, end, and gene_id (the exact column names do not matter). Each remaining column must correspond to a sample. The third column, end, will be used as the transcription start site (following FastQTL; so make sure to put the desired transcription start site in this column). The second column, start, will not be used.
 #'

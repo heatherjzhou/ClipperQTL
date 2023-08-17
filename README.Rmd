@@ -5,14 +5,16 @@ bibliography: misc/references.bib
 nocite: |
   @gtexconsortiumGTExConsortiumAtlas2020
   @ongenFastEfficientQTL2016
-  
+  @davisEfficientMultipletestingAdjustment2016
+  @petersonTreeQTLHierarchicalError2016
+
   @zhouPCAOutperformsPopular2022b
   @bujaRemarksParallelAnalysis1992
   
   @wangSimpleNewApproach2020
 ---
 
-
+We have shown that ClipperQTL achieves a 500-fold or 50-fold increase in computational efficiency compared to FastQTL (depending on the variant used) without sacrificing power or precision (preprint). In contrast, other alternatives to FastQTL such as eigenMT and TreeQTL have lower power than FastQTL. Here we show how to install and use ClipperQTL.
 
 ## 1. Installation
 
@@ -40,7 +42,7 @@ devtools::install_github("heatherjzhou/ClipperQTL")
 
 The ClipperQTL package contains two main functions: `ClipperQTL()` for identifying eGenes and `callSigGeneSNPPairs()` for identifying significant gene-SNP pairs. Details of these functions can be found by running `library(ClipperQTL)` followed by `?ClipperQTL` and `?callSigGeneSNPPairs`.
 
-`ClipperQTL()` requires three main pieces of input data: expression data, covariate data, and genotype data. The file paths are specified by `exprFile`, `covFile`, and `genotypeFile`, respectively. All three data sets must have the same format as the data sets used in GTEx V8 analysis [-@gtexconsortiumGTExConsortiumAtlas2020] (https://gtexportal.org/home/datasets).
+`ClipperQTL()` requires three main pieces of input data: expression data, covariate data, and genotype data (the file paths are specified by `exprFile`, `covFile`, and `genotypeFile`, respectively; see example code below). All three data sets must have the same format as the data sets used in GTEx V8 analysis [-@gtexconsortiumGTExConsortiumAtlas2020] (https://gtexportal.org/home/datasets).
 
 Specifically, the expression file must be a .bed.gz file. The first four columns must be chr, start, end, and gene_id (the exact column names do not matter). Each remaining column must correspond to a sample. The third column, end, will be used as the transcription start site (following FastQTL; so make sure to put the desired transcription start site in this column). The second column, start, will not be used. An example expression file is provided in the folder named "example" in this repository. This file is downloaded from https://gtexportal.org/home/datasets.
 

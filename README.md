@@ -1,6 +1,12 @@
 ClipperQTL
 ================
 
+We have shown that ClipperQTL achieves a 500-fold or 50-fold increase in
+computational efficiency compared to FastQTL (depending on the variant
+used) without sacrificing power or precision (preprint). In contrast,
+other alternatives to FastQTL such as eigenMT and TreeQTL have lower
+power than FastQTL. Here we show how to install and use ClipperQTL.
+
 ## 1. Installation
 
 First, install qValue from Bioconductor and Clipper from GitHub.
@@ -34,10 +40,11 @@ running `library(ClipperQTL)` followed by `?ClipperQTL` and
 `?callSigGeneSNPPairs`.
 
 `ClipperQTL()` requires three main pieces of input data: expression
-data, covariate data, and genotype data. The file paths are specified by
-`exprFile`, `covFile`, and `genotypeFile`, respectively. All three data
-sets must have the same format as the data sets used in GTEx V8 analysis
-(2020) (<https://gtexportal.org/home/datasets>).
+data, covariate data, and genotype data (the file paths are specified by
+`exprFile`, `covFile`, and `genotypeFile`, respectively; see example
+code below). All three data sets must have the same format as the data
+sets used in GTEx V8 analysis (2020)
+(<https://gtexportal.org/home/datasets>).
 
 Specifically, the expression file must be a .bed.gz file. The first four
 columns must be chr, start, end, and gene_id (the exact column names do
@@ -203,6 +210,18 @@ Analysis.” *Multivariate Behavioral Research* 27 (4): 509–40.
 
 </div>
 
+<div id="ref-davisEfficientMultipletestingAdjustment2016"
+class="csl-entry">
+
+Davis, Joe R., Laure Fresard, David A. Knowles, Mauro Pala, Carlos D.
+Bustamante, Alexis Battle, and Stephen B. Montgomery. 2016. “An
+Efficient Multiple-Testing Adjustment for <span
+class="nocase">eQTL</span> Studies That Accounts for Linkage
+Disequilibrium Between Variants.” *The American Journal of Human
+Genetics* 98 (1): 216–24.
+
+</div>
+
 <div id="ref-gtexconsortiumGTExConsortiumAtlas2020" class="csl-entry">
 
 GTEx Consortium. 2020. “The GTEx Consortium Atlas of Genetic Regulatory
@@ -216,6 +235,14 @@ Ongen, Halit, Alfonso Buil, Andrew Anand Brown, Emmanouil T.
 Dermitzakis, and Olivier Delaneau. 2016. “Fast and Efficient QTL Mapper
 for Thousands of Molecular Phenotypes.” *Bioinformatics* 32 (10):
 1479–85.
+
+</div>
+
+<div id="ref-petersonTreeQTLHierarchicalError2016" class="csl-entry">
+
+Peterson, C. B., M. Bogomolov, Y. Benjamini, and C. Sabatti. 2016.
+“TreeQTL: Hierarchical Error Control for <span
+class="nocase">eQTL</span> Findings.” *Bioinformatics* 32 (16): 2556–58.
 
 </div>
 
