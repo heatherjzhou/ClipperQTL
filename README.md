@@ -3,9 +3,9 @@ ClipperQTL
 
 We have shown that ClipperQTL achieves a 500-fold or 50-fold increase in
 computational efficiency compared to FastQTL (depending on the variant
-used) without sacrificing power or precision (preprint). In contrast,
-other alternatives to FastQTL such as eigenMT and TreeQTL have lower
-power than FastQTL. Here we show how to install and use ClipperQTL.
+used) without sacrificing power or precision (2023). In contrast, other
+alternatives to FastQTL such as eigenMT and TreeQTL have lower power
+than FastQTL. Here we show how to install and use ClipperQTL.
 
 ## 1. Installation
 
@@ -13,10 +13,10 @@ First, install qValue from Bioconductor and Clipper from GitHub.
 
 ``` r
 #install.packages("BiocManager")
-BiocManager::install("qvalue")
+BiocManager::install("qvalue") #Needed for the standard variant of ClipperQTL.
 
 #install.packages("devtools")
-install_github("JSB-UCLA/Clipper")
+install_github("JSB-UCLA/Clipper") #Needed for the Clipper variant of ClipeprQTL.
 ```
 
 Next, install tabix by installing HTSlib. You may follow the
@@ -89,11 +89,11 @@ samples than the expression file and the covariate file (which must have
 the same samples). An example genotype file is not provided in this
 repository. The GTEx V8 genotype file can be downloaded from the AnVIL
 repository with an approved dbGaP application (see
-<https://gtexportal.org/home/protectedDataAccess>)
+<https://gtexportal.org/home/protectedDataAccess>).
 
 The main method parameters of `ClipperQTL()` are `approach` and `B`.
 `approach` must be `"standard"` or `"Clipper"`, corresponding to the
-standard variant and the Clipper variant of ClipperQTL (preprint). The
+standard variant and the Clipper variant of ClipperQTL (2023). The
 default is `approach="standard"` and `B=1000`. If the sample size is
 greater than 450, then you may use `approach="Clipper"` and `B` between
 20 and 100 for faster computational speed. If `approach="Clipper"` and
@@ -146,8 +146,8 @@ The main method parameters of `callSigGeneSNPPairs()` are
 `"topPercent"` is used.
 
 If `sigGeneSNPPairMethod="FastQTL"`, then significant gene-SNP pairs
-will be identified using the method in FastQTL (see Algorithm S2 of
-preprint; inverse functions of cumulative distribution functions are
+will be identified using the method in FastQTL (see Algorithm S2 of our
+paper; inverse functions of cumulative distribution functions are
 replaced by quantile functions).
 
 If `sigGeneSNPPairMethod="topPercent"`, then the top 1% local common
@@ -196,7 +196,8 @@ fine-mapping methods such as SuSiE (2020).
 ## Citation
 
 To acknowledge this package or this tutorial, please cite our paper
-(preprint). For questions, please email us at <lijy03@g.ucla.edu> or
+(2023): <https://www.biorxiv.org/content/10.1101/2023.08.28.555191v1>.
+For questions, please email us at <lijy03@g.ucla.edu> or
 <heatherjzhou@ucla.edu>.
 
 ## References
@@ -252,6 +253,14 @@ Wang, Gao, Abhishek Sarkar, Peter Carbonetto, and Matthew Stephens.
 2020. “A Simple New Approach to Variable Selection in Regression, with
 Application to Genetic Fine Mapping.” *Journal of the Royal Statistical
 Society: Series B (Statistical Methodology)* 82 (5): 1273–1300.
+
+</div>
+
+<div id="ref-zhouClipperQTLUltrafastPowerful2023" class="csl-entry">
+
+Zhou, Heather J., Xinzhou Ge, and Jingyi Jessica Li. 2023. “ClipperQTL:
+Ultrafast and Powerful <span class="nocase">eGene</span> Identification
+Method.” *bioRxiv*.
 
 </div>
 
