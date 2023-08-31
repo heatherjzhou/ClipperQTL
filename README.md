@@ -196,9 +196,8 @@ fine-mapping methods such as SuSiE (2020).
 ## Citation
 
 To acknowledge this package or this tutorial, please cite our paper
-(2023): <https://www.biorxiv.org/content/10.1101/2023.08.28.555191v1>.
-For questions, please email us at <lijy03@g.ucla.edu> or
-<heatherjzhou@ucla.edu>.
+(2023): <https://doi.org/10.1101/2023.08.28.555191>. For questions,
+please email us at <lijy03@g.ucla.edu> or <heatherjzhou@ucla.edu>.
 
 ## References
 
