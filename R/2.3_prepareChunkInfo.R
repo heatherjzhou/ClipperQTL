@@ -46,6 +46,10 @@ prepareChunkInfo<-function(dataGeneExpressionFP,numOfChunksTarget,outputDir){
   chunkInfo<-chunkInfo%>%select(indexOfChunk,chr,
                                 geneIndexWithinChrStart,geneIndexWithinChrEnd)
 
+  #Edge case (OneK1K data, cell type 0, 450 genes total).
+  chunkInfo<-chunkInfo%>%filter(geneIndexWithinChrStart<=geneIndexWithinChrEnd)
+  chunkInfo$indexOfChunk<-1:nrow(chunkInfo)
+
   # #Check chunkInfo.
   # chunkInfo<-chunkInfo%>%mutate(numOfGenesInChunk=geneIndexWithinChrEnd-geneIndexWithinChrStart+1)
   # sum(chunkInfo$numOfGenesInChunk) #26,095.
