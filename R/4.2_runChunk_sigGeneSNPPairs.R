@@ -93,7 +93,7 @@ runChunk_sigGeneSNPPairs<-function(dataGeneExpressionFPSub,dataCovariates,
 
     cat("Obtaining genotype data for Chunk ",indexOfChunk,"...\n",sep="")
 
-    dataGenotype<-getDataGenotypeCpp(chrCurr=dataGeneExpressionFPSub$chr[1],geneTSSs,genotypeFile,tabixProgram,tempFileName=tempfile(),
+    dataGenotype<-getDataGenotypeCpp(chrCurr=as.character(dataGeneExpressionFPSub$chr[1]),geneTSSs,genotypeFile,tabixProgram,tempFileName=tempfile(),
                                      sampleIndices,cisDistance,MAFThreshold,MASamplesThreshold) #A list of two items: SNPInfo and X.
 
     SNPInfo<-dataGenotype$SNPInfo #131,649*3. The columns are: CHROM, POS, ID.

@@ -62,13 +62,13 @@ Rcpp::List getDataGenotypeCpp(const std::string chrCurr,
       if(indexOfColumn<=2){ //Fill SNPInfo.
         SNPInfo(indexOfLine,indexOfColumn)=myWord;
       }else if(indexOfColumn==(sampleIndices(numOfSamplesProcessed)-1)){ //Fill X.
-        if(myWord=="0|0"){
+        if(myWord.substr(0,3)=="0|0"){
           X(indexOfLine,numOfSamplesProcessed)=0;
           numsOfSamples0(indexOfLine)+=1;
-        }else if(myWord=="0|1" || myWord=="1|0"){
+        }else if(myWord.substr(0,3)=="0|1" || myWord.substr(0,3)=="1|0"){
           X(indexOfLine,numOfSamplesProcessed)=1;
           numsOfSamples1(indexOfLine)+=1;
-        }else if(myWord=="1|1"){
+        }else if(myWord.substr(0,3)=="1|1"){
           X(indexOfLine,numOfSamplesProcessed)=2;
           numsOfSamples2(indexOfLine)+=1;
         }else{
