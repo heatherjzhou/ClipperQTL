@@ -58,6 +58,49 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
 
 
 
+  # #Load dataGeneExpressionFPSub and dataCovariates.
+  # if(TRUE){
+  #   cellTypeIndex<-0 #Sample size is 981.
+  #   numOfPCs<-19 #Chosen via elbow.
+  #
+  #   exprFile<-paste0("~/_Data/2023.09.11_OneK1K/_2023.09.18_De_Novo/1.2_expr_fullyProcessed/withoutINT/cellType",cellTypeIndex,".bed.gz")
+  #   covFile<-paste0("~/_Data/2023.09.11_OneK1K/_2023.09.18_De_Novo/3.4_covariatesCombined/cellType",cellTypeIndex,"/withoutINT_",numOfPCs,"ExprPCs.txt")
+  #
+  #   source("~/2022.03.14_ClipperQTL/ClipperQTL/R/2.1_prepareExprAndCovData.R")
+  #   temp<-prepareExprAndCovData(exprFile,covFile)
+  #   dataGeneExpressionFP<-temp$dataGeneExpressionFP #9290*985. The first four columns are chr, start, end, and gene_id. end is used as TSS.
+  #   dataCovariates<-temp$dataCovariates #981*21. The columns are the known and inferred covariates. No need to convert the matrix to a data frame.
+  #
+  #   #Load dataGeneExpressionFPSub.
+  #   indexOfChunk<-5
+  #   outputDir<-paste0("~/2022.03.14_ClipperQTL/ClipperQTL/R/_temp/cellType",cellTypeIndex,"/")
+  #   chunkInfo<-readRDS(paste0(outputDir,"_chunkInfo.rds")) #103*4.
+  #   source("~/2022.03.14_ClipperQTL/ClipperQTL/R/2.5_prepareDataGeneExpressionFPSub.R")
+  #   dataGeneExpressionFPSub<-prepareDataGeneExpressionFPSub(dataGeneExpressionFP,indexOfChunk,chunkInfo) #257*519. The first four columns are chr, start, end, and gene_id. end is used as TSS.
+  #
+  #   rm(list=setdiff(ls(),c("getDataGenotypeCpp","getTableMaxAbsCorsCpp",
+  #                          "dataGeneExpressionFPSub","dataCovariates","indexOfChunk","outputDir")))
+  # }
+  #
+  # genotypeFile<-"~/_Data/2023.09.11_OneK1K/_2023.09.12_Authors/filter_vcf_r08/_combined.vcf.gz"
+  # tabixProgram<-"~/_Applications/htslib-1.10.2/bin/tabix"
+  # source("~/2022.03.14_ClipperQTL/ClipperQTL/R/2.2_prepareSampleIndices.R")
+  # sampleIndices<-prepareSampleIndices(genotypeFile,tabixProgram,outputDir,
+  #                                     sampleNames=colnames(dataGeneExpressionFPSub)[-(1:4)]) #Vector of length 515.
+  # rm(prepareSampleIndices)
+  #
+  # approach<-"Clipper" #Use this to make testing faster.
+  # B<-20 #Use this to make testing faster.
+  # cisDistance<-1e6
+  # MAFThreshold<-0.01
+  # MASamplesThreshold<-10
+  #
+  # RNGkind("L'Ecuyer-CMRG")
+  # set.seed(1)
+  # #To comment out.
+
+
+
   geneTSSs<-dataGeneExpressionFPSub$end #Vector of length 257. Key variable.
   Y<-as.matrix(dataGeneExpressionFPSub[,-(1:4)]) #257*515. Key variable.
   # dim(Y)
@@ -84,6 +127,11 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
   # dim(X) #131,682*515.
   # sum(abs(SNPPositions-geneTSSs[1])<=1e6) #7261 local common SNPs for the first gene in Chunk 5 of Lung. Matches FastQTL.
   # sum(abs(SNPPositions-geneTSSs[2])<=1e6) #7278 local common SNPs for the second gene in Chunk 5 of Lung. Matches FastQTL.
+
+  # dim(SNPInfo) #101,908*3.
+  # dim(X) #101,908*981.
+  # sum(abs(SNPPositions-geneTSSs[1])<=1e6) #3514 local common SNPs for the first gene in Chunk 5 of cell type 0. Matches FastQTL.
+  # sum(abs(SNPPositions-geneTSSs[2])<=1e6) #3678 local common SNPs for the second gene in Chunk 5 of cell type 0. Matches FastQTL.
 
   #Get tableMaxAbsCors. This takes about 16 or 24 seconds, depending on conditions. Takes longer as of 2023/07/01.
   if(TRUE){

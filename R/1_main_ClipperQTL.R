@@ -87,6 +87,30 @@ ClipperQTL<-function(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
 
 
 
+  # cellTypeIndex<-0 #Sample size is 981.
+  # numOfPCs<-19 #Chosen via elbow.
+  #
+  # exprFile<-paste0("~/_Data/2023.09.11_OneK1K/_2023.09.18_De_Novo/1.2_expr_fullyProcessed/withoutINT/cellType",cellTypeIndex,".bed.gz")
+  # covFile<-paste0("~/_Data/2023.09.11_OneK1K/_2023.09.18_De_Novo/3.4_covariatesCombined/cellType",cellTypeIndex,"/withoutINT_",numOfPCs,"ExprPCs.txt")
+  # genotypeFile<-"~/_Data/2023.09.11_OneK1K/_2023.09.12_Authors/filter_vcf_r08/_combined.vcf.gz"
+  # tabixProgram<-"~/_Applications/htslib-1.10.2/bin/tabix"
+  # outputDir<-paste0("~/2022.03.14_ClipperQTL/ClipperQTL/R/_temp/cellType",cellTypeIndex,"/")
+  # rm(cellTypeIndex,numOfPCs)
+  #
+  # approach<-"standard"
+  # B<-1000
+  #
+  # cisDistance<-1e6
+  # MAFThreshold<-0.01
+  # MASamplesThreshold<-10
+  #
+  # numOfChunksTarget<-100 #The total number of chunks will be approximately this number.
+  # seed<-1
+  # numOfCores<-1
+  # #To comment out.
+
+
+
   #Create output directory.
   if(!dir.exists(outputDir)) dir.create(outputDir)
 
