@@ -16,7 +16,7 @@ First, install qValue from Bioconductor and Clipper from GitHub.
 BiocManager::install("qvalue") #Needed for the standard variant of ClipperQTL.
 
 #install.packages("devtools")
-install_github("JSB-UCLA/Clipper") #Needed for the Clipper variant of ClipeprQTL.
+install_github("JSB-UCLA/Clipper") #Needed for the Clipper variant of ClipperQTL.
 ```
 
 Next, install tabix by installing HTSlib. You may follow the
@@ -69,11 +69,8 @@ column must correspond to a sample. All constant covariates will be
 filtered out before analysis. An example covariate file is provided in
 the folder named “example” in this repository. The known covariates are
 obtained from <https://gtexportal.org/home/datasets>. The inferred
-covariates are the top expression PCs (2022), and the number of PCs is
-chosen via the Buja and Eyuboglu (BE) algorithm using PCAForQTL
-(<https://github.com/heatherjzhou/PCAForQTL>) (2022; 1992). We use the
-BE algorithm because we find that in our simulated data, the BE
-algorithm can recover the true number of covariates well.
+covariates are the top expression PCs (2022)
+(<https://github.com/heatherjzhou/PCAForQTL>).
 
 ``` r
 #Take a look at the example covariate file.
@@ -83,21 +80,20 @@ temp2<-readr::read_delim(covFile,delim="\t",escape_double=FALSE,trim_ws=TRUE) #5
 ```
 
 The genotype file must be a .vcf.gz file. The non-empty genotype entries
-must be “0\|0”, “0\|1”, “1\|0”, or “1\|1”. The missing genotype entries
-will be imputed as within-SNP averages. This file can contain more
-samples than the expression file and the covariate file (which must have
-the same samples). An example genotype file is not provided in this
-repository. The GTEx V8 genotype file can be downloaded from the AnVIL
-repository with an approved dbGaP application (see
-<https://gtexportal.org/home/protectedDataAccess>).
+must start with “0\|0”, “0\|1”, “1\|0”, or “1\|1” (trailing characters
+are ok). The missing genotype entries will be imputed as within-SNP
+averages. This file can contain more samples than the expression file
+and the covariate file (which must have the same samples). An example
+genotype file is not provided in this repository. The GTEx V8 genotype
+file can be downloaded from the AnVIL repository with an approved dbGaP
+application (see <https://gtexportal.org/home/protectedDataAccess>).
 
-The main method parameters of `ClipperQTL()` are `approach` and `B`.
-`approach` must be `"standard"` or `"Clipper"`, corresponding to the
-standard variant and the Clipper variant of ClipperQTL (2023). The
-default is `approach="standard"` and `B=1000`. If the sample size is
-greater than 450, then you may use `approach="Clipper"` and `B` between
-20 and 100 for faster computational speed. If `approach="Clipper"` and
-`B=NULL`, then `B` will be set to 20.
+The main method parameters of `ClipperQTL()` are `approach` and `B`. If
+the sample size is less than or equal to 450, then we recommend setting
+`approach="standard"` and `B=1000`. If the sample size is greater than
+450, then you may set `approach="standard"` and `B=1000`, or, you may
+set `approach="Clipper"` and `B=1` or `B` between 20 and 100 for faster
+computational speed (2023).
 
 `ClipperQTL()` outputs several files in the output directory. The most
 important one is named “\_resultGenes.rds”, which can be read into R
@@ -121,7 +117,7 @@ B<-1000
 
 # #Alternatively, use the Clipper variant of ClipperQTL for faster computational speed (only recommended for data sets with sample size greater than 450).
 # approach<-"Clipper"
-# B<-20 #B between 20 and 100 is recommended.
+# B<-1 #B=1 or B between 20 and 100 is recommended.
 
 outputDir<-paste0("~/2022.03.14_ClipperQTL/ClipperQTL/example/Whole_Blood_","approach=",approach,"_B=",B,"/")
 if(!dir.exists(outputDir)) dir.create(outputDir)
@@ -178,7 +174,7 @@ B<-1000
 
 # #Alternatively, follow up with the Clipper variant of ClipperQTL.
 # approach<-"Clipper"
-# B<-20
+# B<-1
 
 outputDir<-paste0("/home/heatherjzhou/2022.03.14_ClipperQTL/ClipperQTL/example/Whole_Blood_","approach=",approach,"_B=",B,"/") #"~" may not be recognized as the home directory in C++; you may need to spell out the directory name instead.
 
@@ -203,20 +199,13 @@ please email us at <lijy03@g.ucla.edu> or <heatherjzhou@ucla.edu>.
 
 <div id="refs" class="references csl-bib-body hanging-indent">
 
-<div id="ref-bujaRemarksParallelAnalysis1992" class="csl-entry">
-
-Buja, Andreas, and Nermin Eyuboglu. 1992. “Remarks on Parallel
-Analysis.” *Multivariate Behavioral Research* 27 (4): 509–40.
-
-</div>
-
 <div id="ref-davisEfficientMultipletestingAdjustment2016"
 class="csl-entry">
 
 Davis, Joe R., Laure Fresard, David A. Knowles, Mauro Pala, Carlos D.
 Bustamante, Alexis Battle, and Stephen B. Montgomery. 2016. “An
-Efficient Multiple-Testing Adjustment for <span
-class="nocase">eQTL</span> Studies That Accounts for Linkage
+Efficient Multiple-Testing Adjustment for
+<span class="nocase">eQTL</span> Studies That Accounts for Linkage
 Disequilibrium Between Variants.” *The American Journal of Human
 Genetics* 98 (1): 216–24.
 
@@ -241,8 +230,9 @@ for Thousands of Molecular Phenotypes.” *Bioinformatics* 32 (10):
 <div id="ref-petersonTreeQTLHierarchicalError2016" class="csl-entry">
 
 Peterson, C. B., M. Bogomolov, Y. Benjamini, and C. Sabatti. 2016.
-“TreeQTL: Hierarchical Error Control for <span
-class="nocase">eQTL</span> Findings.” *Bioinformatics* 32 (16): 2556–58.
+“TreeQTL: Hierarchical Error Control for
+<span class="nocase">eQTL</span> Findings.” *Bioinformatics* 32 (16):
+2556–58.
 
 </div>
 
