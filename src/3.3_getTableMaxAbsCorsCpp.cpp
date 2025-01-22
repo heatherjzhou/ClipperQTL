@@ -38,13 +38,13 @@ arma::mat getTableMaxAbsCorsCpp(const arma::mat Y,
 
   //Get the design matrix.
   mat D=getDesignMatrix(dataCovariates); //515*53. Design matrix.
-  // mat H=D*(D.t()*D).i()*D.t(); //515*515. Projection matrix. H=D*(D^T*D)^(-1)*D^T. Symmetric matrix. Not calculating the projection matrix in advance cuts the runtime in about half.
+  // mat H=D*(D.t()*D).i()*D.t(); //515*515. Projection matrix. H=D*(D^T*D)^(-1)*D^T. Symmetric matrix. Not calculating the projection matrix in advance cuts the run time in about half.
 
   //Create YCube.
   //If approach is "standard", then the first slice is YResid, and each of the remaining slices is a YPermResid.
   //If approach is "Clipper", then the first slice is YResid, and each of the remaining slices is a YResidPerm.
   cube YCube(Y.n_rows,Y.n_cols,1+B); //257*515*21.
-  if(approach=="standard"){ //Permute first, then residualize.
+  if(approach=="standard"){ //Permute first and then residualize.
     for(int indexOfExperAndBg=0;indexOfExperAndBg<(1+B);indexOfExperAndBg++){
       if(indexOfExperAndBg==0){
         // mat YResid=Y-Y*H; //257*515.
@@ -57,7 +57,7 @@ arma::mat getTableMaxAbsCorsCpp(const arma::mat Y,
         YCube.slice(indexOfExperAndBg)=YPermResid;
       }
     }
-  }else if(approach=="Clipper"){ //Residualize first, then permute.
+  }else if(approach=="Clipper"){ //Residualize first and then permute.
     // mat YResid=Y-Y*H; //257*515.
     mat YResid=Y-Y*D*(D.t()*D).i()*D.t(); //257*515.
     for(int indexOfExperAndBg=0;indexOfExperAndBg<(1+B);indexOfExperAndBg++){
@@ -70,8 +70,9 @@ arma::mat getTableMaxAbsCorsCpp(const arma::mat Y,
   }
 
   //Residualize XRaw against the covariates. Use the following sequence of steps for the fastest speed. Inspired by residualizeCpp().
-  //Using two steps instead of only one step reduces the runtime by about 4 seconds.
-  //Ensuring that the smaller matrices are multiplied together first in the calculation of coef_T reduces the runtime slightly.
+  //Using two steps instead of only one step reduces the run time by about 4 seconds.
+  //Ensuring that the smaller matrices are multiplied together first in the calculation of coef_T reduces the run time slightly.
+  //The same strategy does not make residualizing Y faster (in fact, it makes it slightly slower).
   mat coef_T=XRaw*(D*(D.t()*D).i());
   mat X=XRaw-coef_T*D.t(); //131,682*515.
 

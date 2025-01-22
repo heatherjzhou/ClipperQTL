@@ -17,11 +17,8 @@ prepareMethodParameters<-function(approach,B,sampleSize){
       cat('\n\n\n\n\n!!!Warning: since the sample size is under 450, we strongly recommend using approach="standard".\n')
       cat('\n\n\n\n\nContinuing with approach="Clipper"...\n')
     }
-
-    if(is.null(B)){
-      B<-20
-    }else if(B<20||B>100){
-      cat('\n\n\n\n\n!!!Warning: if approach="Clipper", we strongly recommend using B between 20 and 100.\n')
+    if(!B%in%c(1,20:100)){
+      cat('\n\n\n\n\n!!!Warning: if approach="Clipper", we strongly recommend using B=1 or B between 20 and 100.\n')
       cat('\n\n\n\n\nContinuing with the user-specified B...\n')
     }
   }else{

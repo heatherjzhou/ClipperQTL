@@ -5,14 +5,14 @@ callEGenes<-function(resultCombined,approach,B,
                      outputDir){
 
   if(approach=="standard"){
-    # resultCombined<-readRDS("~/2022.03.14_ClipperQTL/ClipperQTL/test/2023.06.27_runPackage/_result/Lung/approach=standard_B=1000/_resultCombined.rds")
+    # resultCombined<-readRDS("~/2022.03.14_ClipperQTL/ClipperQTL/test/2023.06.27_runPackage/_result/Lung/approach=standard_B=1000/_resultGenes.rds")
     # approach<-"standard"
     # B<-1000
     # outputDir<-"~/2022.03.14_ClipperQTL/ClipperQTL/test/2023.06.27_runPackage/_result/Lung/approach=standard_B=1000/"
     # #To comment out.
 
     expScores<-resultCombined[,5] #Vector of length 26,095.
-    bgScores<-resultCombined[,6:ncol(resultCombined)] #maxAbsCor.
+    bgScores<-resultCombined[,6:(4+1+B)]
     # dim(bgScores) #26,095*1000.
 
     temp<-bgScores-expScores
@@ -24,7 +24,7 @@ callEGenes<-function(resultCombined,approach,B,
     # eGenes<-(resultCombined%>%filter(qValue<=0.05))$gene_id
 
   }else if(approach=="Clipper"){
-    # resultCombined<-readRDS("~/2022.03.14_ClipperQTL/ClipperQTL/test/2023.06.27_runPackage/_result/Lung/approach=Clipper_B=20/_resultCombined.rds")
+    # resultCombined<-readRDS("~/2022.03.14_ClipperQTL/ClipperQTL/test/2023.06.27_runPackage/_result/Lung/approach=Clipper_B=20/_resultGenes.rds")
     # approach<-"Clipper"
     # B<-20
     # outputDir<-"~/2022.03.14_ClipperQTL/ClipperQTL/test/2023.06.27_runPackage/_result/Lung/approach=Clipper_B=20/"
@@ -38,8 +38,8 @@ callEGenes<-function(resultCombined,approach,B,
       h<-1
     }
 
-    temp<-Clipper::Clipper(score.exp=resultCombined[,5],
-                           score.back=resultCombined[,6:ncol(resultCombined)], #Key argument.
+    temp<-Clipper::Clipper(score.exp=as.matrix(resultCombined[,5]),
+                           score.back=as.matrix(resultCombined[,6:(4+1+B)]), #Key argument.
                            analysis="enrichment",
                            procedure=procedure,
                            contrast.score="max",

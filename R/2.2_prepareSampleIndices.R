@@ -13,7 +13,7 @@ prepareSampleIndices<-function(genotypeFile,tabixProgram,outputDir,
   # exprFile<-paste0("~/_Data/2020.09.21_GTEx_V8/1_Raw/Single_Tissue_cis_QTL_Data/GTEx_Analysis_v8_eQTL_expression_matrices/",
   #                  tissueType,".v8.normalized_expression.bed.gz")
   # dataGeneExpressionFP<-readr::read_delim(exprFile,delim="\t",escape_double=FALSE,trim_ws=TRUE) #Import from text (base) does not work. Import from text (readr) works.
-  # colnames(dataGeneExpressionFP)[1]<-"chr" #26,095*519. The first four columns are chr, start, end, and gene_id. end is used as TSS.
+  # colnames(dataGeneExpressionFP)[1:4]<-c("chr","start","end","gene_id") #26,095*519. The first four columns are chr, start, end, and gene_id. end is used as TSS.
   # sampleNames<-colnames(dataGeneExpressionFP)[-(1:4)] #Vector of length 515.
   # #To comment out.
 
