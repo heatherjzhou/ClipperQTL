@@ -133,7 +133,7 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
   # sum(abs(SNPPositions-geneTSSs[1])<=1e6) #3514 local common SNPs for the first gene in Chunk 5 of cell type 0. Matches FastQTL.
   # sum(abs(SNPPositions-geneTSSs[2])<=1e6) #3678 local common SNPs for the second gene in Chunk 5 of cell type 0. Matches FastQTL.
 
-  #Get tableMaxAbsCors. This takes about 16 or 24 seconds, depending on conditions. Takes longer as of 2023/07/01.
+  #Get tableMaxAbsCors. This takes about 16 or 24 seconds, depending on conditions. Takes less time as of 2025/01/22.
   if(TRUE){
     timeStart<-Sys.time()
 
@@ -161,6 +161,12 @@ runChunk<-function(dataGeneExpressionFPSub,dataCovariates,
   #Save resultChunk.
   path<-paste0(outputDir,"resultChunk",indexOfChunk,".rds") #resultChunk5.rds.
   saveRDS(resultChunk,path)
+
+  # #Compare resultChunk to resultChunk_freeze.
+  # resultChunk_freeze<-readRDS("~/2022.03.14_ClipperQTL/ClipperQTL/R/_temp/Lung/resultChunk5_freeze.rds")
+  # identical(resultChunk_freeze[,1:4],resultChunk[,1:4]) #TRUE is good.
+  # max(abs(resultChunk_freeze$exp-resultChunk$exp)) #9.992007e-16.
+  # max(abs(resultChunk_freeze[,-(1:4)]-resultChunk[,-(1:4)])) #2.664535e-15.
 }
 
 
