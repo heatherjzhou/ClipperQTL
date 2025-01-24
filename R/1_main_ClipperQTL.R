@@ -11,11 +11,11 @@
 #'
 #' The covariate file must be a .txt file. The first column must be the covariate ID (the exact column name does not matter). Each remaining column must correspond to a sample. All constant covariates will be filtered out before analysis.
 #'
-#' The genotype file must be a .vcf.gz file. The non-empty genotype entries must start with "0|0", "0|1", "1|0", or "1|1" (trailing characters are ok). The missing genotype entries will be imputed as within-SNP averages. This file can contain more samples than the expression file and the covariate file (which must have the same samples).
+#' The genotype file must be a .vcf.gz file. A .tbi index file must be present in the same directory, which can be generated using HTSlib tabix. The non-empty genotype entries must start with "0|0", "0|1", "1|0", or "1|1" (trailing characters are ok). The missing genotype entries will be imputed as within-SNP averages. This file can contain more samples than the expression file and the covariate file (which must have the same samples).
 #'
 #' The main method parameters of \code{ClipperQTL()} are \code{approach} and \code{B}. If the sample size is less than or equal to 450, then we recommend setting \code{approach="standard"} and \code{B=1000}. If the sample size is greater than 450, then you may set \code{approach="standard"} and \code{B=1000}, or, you may set \code{approach="Clipper"} and \code{B=1} or \code{B} between 20 and 100 for faster computational speed.
 #'
-#' \code{ClipperQTL()} outputs several files in the output directory. The most important one is named "_resultGenes.rds", which can be read into R with \code{readRDS()}. The first four columns are identical to the first four columns in the expression file. The next \code{B+1} columns are the maximum absolute correlations from the experimental round and the permutation rounds. The eGenes are those with \code{qValue} (the last column) under the target FDR threshold, e.g., 0.05.
+#' \code{ClipperQTL()} outputs several files in the output directory. The most important one is named "_resultGenes.rds", which can be read into R with \code{readRDS()}. The first four columns are identical to the first four columns in the expression file. The next \code{1+B} columns are the maximum absolute correlations from the experimental round and the permutation rounds. The second to last column is \code{pValue} (standard variant) or \code{contrastScore} (Clipper variant). The last column is \code{qValue}. Each row corresponds to a gene. The eGenes are those with \code{qValue} under the target FDR threshold, e.g., 0.05.
 #'
 #' @param exprFile The directory and filename of the expression file (.bed.gz file; see below).
 #' @param covFile The directory and filename of the covariate file (.txt file; see below).
