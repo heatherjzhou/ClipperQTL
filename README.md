@@ -102,21 +102,24 @@ be used. However, if the majority of data sets in the study have smaller
 sample sizes, then you may choose to use the standard variant on all
 data sets for consistency.
 
+\<\<\<\<\<\<\< HEAD `ClipperQTL()` outputs several files in the output
+directory. The most important one is named “\_resultGenes.rds”, which
+can be read into R with `readRDS()`. The first four columns are
+identical to the first four columns in the expression file. The next
+`1+B` columns are the maximum absolute correlations from the
+experimental round and the permutation rounds. The second to last column
+is `pValue` (standard variant) or `contrastScore` (Clipper variant). The
+last column is `qValue`. Each row corresponds to a gene. The eGenes are
+those with `qValue` under the target FDR threshold, e.g., 0.05. =======
 `ClipperQTL()` outputs several files in the output directory. The most
 important one is named “\_resultGenes.rds”, which can be read into R
 with `readRDS()`. The first four columns are identical to the first four
 columns in the expression file. The next `1+B` columns are the maximum
 absolute correlations from the experimental round and the permutation
 rounds. The second to last column is `pValue` (standard variant) or
-<<<<<<< HEAD
-`contrastScore` (Clipper variant). The last column is `qValue`. Each row
-corresponds to a gene. The eGenes are those with `qValue` under the
-target FDR threshold, e.g., 0.05.
-=======
 `contrastScore` (Clipper variant). The last column is `qValue`. The
 eGenes are those with `qValue` under the target FDR threshold, e.g.,
-0.05.
->>>>>>> 3b93a709bcaa8de60a426da3b68ec2c0667a852c
+0.05. \>\>\>\>\>\>\> 3b93a709bcaa8de60a426da3b68ec2c0667a852c
 
 ``` r
 #Example code.
@@ -206,16 +209,19 @@ you may try fine-mapping methods such as SuSiE (2020).
 
 ## 4. Memory usage
 
+\<\<\<\<\<\<\< HEAD ClipperQTL should use no more than a few GB of
+memory per core on data sets with under 1000 individuals and ~20,000
+features (this is true for both functions in ClipperQTL: `ClipperQTL()`
+and `callSigGeneSNPPairs()`). The total memory usage is proportional to
+the number of cores used. If memory is a concern, use fewer cores or the
+default number of cores, which is 1 for both functions. =======
 ClipperQTL should use no more than a few GB of memory per core on data
-<<<<<<< HEAD
-sets with under 1000 individuals and ~20,000 features (this is true for
-=======
 sets with under 1000 individuals and ~20,000 genes (this is true for
->>>>>>> 3b93a709bcaa8de60a426da3b68ec2c0667a852c
 both functions in ClipperQTL: `ClipperQTL()` and
 `callSigGeneSNPPairs()`). The total memory usage is proportional to the
 number of cores used. If memory is a concern, use fewer cores or the
-default number of cores, which is 1 for both functions.
+default number of cores, which is 1 for both functions. \>\>\>\>\>\>\>
+3b93a709bcaa8de60a426da3b68ec2c0667a852c
 
 ## Citation
 
