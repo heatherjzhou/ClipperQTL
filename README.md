@@ -1,11 +1,11 @@
 ClipperQTL
 ================
 
-We have shown that ClipperQTL achieves a 500-fold or 50-fold increase in
-computational efficiency compared to FastQTL (depending on the variant
-used) without sacrificing power or precision (2023). In contrast, other
-alternatives to FastQTL such as eigenMT and TreeQTL have lower power
-than FastQTL. Here we show how to install and use ClipperQTL.
+We have shown that ClipperQTL performs as well as FastQTL and runs up to
+500 times faster (2023). Without relying on GPUs, it is up to 30 times
+more computationally efficient than tensorQTL, a GPU-based
+implementation of FastQTL. Here we show how to install and use
+ClipperQTL.
 
 ## 1. Installation
 
@@ -16,13 +16,12 @@ First, install qValue from Bioconductor and Clipper from GitHub.
 BiocManager::install("qvalue") #Needed for the standard variant of ClipperQTL.
 
 #install.packages("devtools")
-install_github("JSB-UCLA/Clipper") #Needed for the Clipper variant of ClipperQTL.
+devtools::install_github("JSB-UCLA/Clipper") #Needed for the Clipper variant of ClipperQTL.
 ```
 
-Next, install tabix by installing HTSlib. You may follow the
-instructions here: <http://www.htslib.org/download/>.
+Next, install HTSlib following <http://www.htslib.org/download/>.
 
-Finally, install ClipperQTL. If prompted, make sure to update
+Lastly, install ClipperQTL. If prompted, make sure to update
 RcppArmadillo to at least Version 0.12.0.1.0, otherwise the installation
 of ClipperQTL will fail. Note that ClipperQTL is only maintained for use
 in Linux.
@@ -79,28 +78,38 @@ covFile<-"~/2022.03.14_ClipperQTL/ClipperQTL/example/Whole_Blood.v8.covariates.t
 temp2<-readr::read_delim(covFile,delim="\t",escape_double=FALSE,trim_ws=TRUE) #50*671.
 ```
 
-The genotype file must be a .vcf.gz file. The non-empty genotype entries
-must start with “0\|0”, “0\|1”, “1\|0”, or “1\|1” (trailing characters
-are ok). The missing genotype entries will be imputed as within-SNP
-averages. This file can contain more samples than the expression file
-and the covariate file (which must have the same samples). An example
-genotype file is not provided in this repository. The GTEx V8 genotype
-file can be downloaded from the AnVIL repository with an approved dbGaP
-application (see <https://gtexportal.org/home/protectedDataAccess>).
+The genotype file must be a .vcf.gz file. A .tbi index file must be
+present in the same directory, which can be generated using HTSlib tabix
+(<https://www.htslib.org/doc/tabix.html>). The non-empty genotype
+entries must start with “0\|0”, “0\|1”, “1\|0”, or “1\|1” (trailing
+characters are ok). The missing genotype entries will be imputed as
+within-SNP averages. This file can contain more samples than the
+expression file and the covariate file (which must have the same
+samples). An example genotype file is not provided in this repository.
+The GTEx V8 genotype file can be downloaded from the AnVIL repository
+with an approved dbGaP application (see
+<https://gtexportal.org/home/protectedDataAccess>).
 
 The main method parameters of `ClipperQTL()` are `approach` and `B`. If
 the sample size is less than or equal to 450, then we recommend setting
 `approach="standard"` and `B=1000`. If the sample size is greater than
 450, then you may set `approach="standard"` and `B=1000`, or, you may
 set `approach="Clipper"` and `B=1` or `B` between 20 and 100 for faster
-computational speed (2023).
+computational speed (2023). Regarding which variant of ClipperQTL should
+be used when the sample size is large enough, we believe that if
+computational efficiency is a priority, then the Clipper variant should
+be used. However, if the majority of data sets in the study have smaller
+sample sizes, then you may choose to use the standard variant on all
+data sets for consistency.
 
 `ClipperQTL()` outputs several files in the output directory. The most
 important one is named “\_resultGenes.rds”, which can be read into R
 with `readRDS()`. The first four columns are identical to the first four
-columns in the expression file. The next `B+1` columns are the maximum
+columns in the expression file. The next `1+B` columns are the maximum
 absolute correlations from the experimental round and the permutation
-rounds. The eGenes are those with `qValue` (the last column) under the
+rounds. The second to last column is `pValue` (standard variant) or
+`contrastScore` (Clipper variant). The last column is `qValue`. Each row
+corresponds to a gene. The eGenes are those with `qValue` under the
 target FDR threshold, e.g., 0.05.
 
 ``` r
@@ -185,9 +194,18 @@ callSigGeneSNPPairs(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
                     FDR_eGene=0.05,sigGeneSNPPairMethod=NULL,percent=1) #Let the function choose sigGeneSNPPairMethod automatically.
 ```
 
-Note that `callSigGeneSNPPairs()` only provides a rudimentary analysis
-of significant gene-SNP pairs. For a more in-depth analysis, you may try
-fine-mapping methods such as SuSiE (2020).
+Please note that `callSigGeneSNPPairs()` only provides a rudimentary
+analysis of significant gene-SNP pairs. For a more in-depth analysis,
+you may try fine-mapping methods such as SuSiE (2020).
+
+## 4. Memory usage
+
+ClipperQTL should use no more than a few GB of memory per core on data
+sets with under 1000 individuals and ~20,000 features (this is true for
+both functions in ClipperQTL: `ClipperQTL()` and
+`callSigGeneSNPPairs()`). The total memory usage is proportional to the
+number of cores used. If memory is a concern, use fewer cores or the
+default number of cores, which is 1 for both functions.
 
 ## Citation
 
@@ -198,18 +216,6 @@ please email us at <lijy03@g.ucla.edu> or <heatherjzhou@ucla.edu>.
 ## References
 
 <div id="refs" class="references csl-bib-body hanging-indent">
-
-<div id="ref-davisEfficientMultipletestingAdjustment2016"
-class="csl-entry">
-
-Davis, Joe R., Laure Fresard, David A. Knowles, Mauro Pala, Carlos D.
-Bustamante, Alexis Battle, and Stephen B. Montgomery. 2016. “An
-Efficient Multiple-Testing Adjustment for
-<span class="nocase">eQTL</span> Studies That Accounts for Linkage
-Disequilibrium Between Variants.” *The American Journal of Human
-Genetics* 98 (1): 216–24.
-
-</div>
 
 <div id="ref-gtexconsortiumGTExConsortiumAtlas2020" class="csl-entry">
 
@@ -227,12 +233,13 @@ for Thousands of Molecular Phenotypes.” *Bioinformatics* 32 (10):
 
 </div>
 
-<div id="ref-petersonTreeQTLHierarchicalError2016" class="csl-entry">
+<div id="ref-taylor-weinerScalingComputationalGenomics2019"
+class="csl-entry">
 
-Peterson, C. B., M. Bogomolov, Y. Benjamini, and C. Sabatti. 2016.
-“TreeQTL: Hierarchical Error Control for
-<span class="nocase">eQTL</span> Findings.” *Bioinformatics* 32 (16):
-2556–58.
+Taylor-Weiner, Amaro, François Aguet, Nicholas J. Haradhvala, Sager
+Gosai, Shankara Anand, Jaegil Kim, Kristin Ardlie, Eliezer M. Van Allen,
+and Gad Getz. 2019. “Scaling Computational Genomics to Millions of
+Individuals with GPUs.” *Genome Biology* 20 (1): 228.
 
 </div>
 
