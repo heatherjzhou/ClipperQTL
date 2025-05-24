@@ -102,6 +102,32 @@ be used. However, if the majority of data sets in the study have smaller
 sample sizes, then you may choose to use the standard variant on all
 data sets for consistency.
 
+``` r
+#Example code.
+
+exprFile<-"~/2022.03.14_ClipperQTL/ClipperQTL/example/Whole_Blood.v8.normalized_expression.bed.gz"
+covFile<-"~/2022.03.14_ClipperQTL/ClipperQTL/example/Whole_Blood.v8.covariates.txt"
+genotypeFile<-"~/_Data/2020.09.21_GTEx_V8/1_Raw/GTEx_Analysis_2017-06-05_v8_WGS_VCF_files/GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.SHAPEIT2_phased.MAF01.vcf.gz"
+tabixProgram<-"~/_Applications/htslib-1.10.2/bin/tabix"
+
+# #Use the standard variant of ClipperQTL.
+# approach<-"standard"
+# B<-1000
+
+#Alternatively, use the Clipper variant of ClipperQTL for faster computational speed (only recommended for data sets with sample size greater than 450).
+approach<-"Clipper"
+B<-1 #B=1 or B between 20 and 100 is recommended.
+
+outputDir<-paste0("~/2022.03.14_ClipperQTL/ClipperQTL/example/Whole_Blood_","approach=",approach,"_B=",B,"/")
+if(!dir.exists(outputDir)) dir.create(outputDir)
+
+library(ClipperQTL) #Loading ClipperQTL also loads dplyr. Loading dplyr is necessary for ClipperQTL() and callSigGeneSNPPairs() to run.
+ClipperQTL(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
+           approach,B,
+           cisDistance=1e6,MAFThreshold=0.01,MASamplesThreshold=10,
+           numOfChunksTarget=100,seed=1,numOfCores=5)
+```
+
 `ClipperQTL()` outputs several files in the output directory. The most
 important one is named “\_resultGenes.rds”, which can be read into R
 with `readRDS()`. The first four columns are identical to the first four
@@ -113,29 +139,29 @@ corresponds to a gene. The eGenes are those with `qValue` under the
 target FDR threshold, e.g., 0.05.
 
 ``` r
-#Example code.
+#Check example output.
 
-exprFile<-"~/2022.03.14_ClipperQTL/ClipperQTL/example/Whole_Blood.v8.normalized_expression.bed.gz"
-covFile<-"~/2022.03.14_ClipperQTL/ClipperQTL/example/Whole_Blood.v8.covariates.txt"
-genotypeFile<-"~/_Data/2020.09.21_GTEx_V8/1_Raw/GTEx_Analysis_2017-06-05_v8_WGS_VCF_files/GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_838Indiv_Analysis_Freeze.SHAPEIT2_phased.MAF01.vcf.gz"
-tabixProgram<-"~/_Applications/htslib-1.10.2/bin/tabix"
+resultGenes<-readRDS("~/2022.03.14_ClipperQTL/ClipperQTL/example/Whole_Blood_approach=Clipper_B=1/_resultGenes.rds")
+head(resultGenes) #20,315*8.
+```
 
-#Use the standard variant of ClipperQTL.
-approach<-"standard"
-B<-1000
+    ##    chr  start    end           gene_id       exp       bg1 contrastScore
+    ## 1 chr1  29552  29553 ENSG00000227232.5 0.2772174 0.1374217     0.2772174
+    ## 2 chr1 129222 129223 ENSG00000238009.6 0.4518417 0.1160305     0.4518417
+    ## 3 chr1 131024 131025 ENSG00000233750.3 0.1503610 0.1403741     0.1503610
+    ## 4 chr1 135894 135895 ENSG00000268903.1 0.2622601 0.1230016     0.2622601
+    ## 5 chr1 137964 137965 ENSG00000269981.1 0.3865567 0.1301688     0.3865567
+    ## 6 chr1 140338 140339 ENSG00000239906.1 0.2673111 0.1386777     0.2673111
+    ##         qValue
+    ## 1 0.0001335113
+    ## 2 0.0001335113
+    ## 3 0.1015217391
+    ## 4 0.0001335113
+    ## 5 0.0001335113
+    ## 6 0.0001335113
 
-# #Alternatively, use the Clipper variant of ClipperQTL for faster computational speed (only recommended for data sets with sample size greater than 450).
-# approach<-"Clipper"
-# B<-1 #B=1 or B between 20 and 100 is recommended.
-
-outputDir<-paste0("~/2022.03.14_ClipperQTL/ClipperQTL/example/Whole_Blood_","approach=",approach,"_B=",B,"/")
-if(!dir.exists(outputDir)) dir.create(outputDir)
-
-library(ClipperQTL) #Loading ClipperQTL also loads dplyr. Loading dplyr is necessary for ClipperQTL() and callSigGeneSNPPairs() to run.
-ClipperQTL(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
-           approach,B,
-           cisDistance=1e6,MAFThreshold=0.01,MASamplesThreshold=10,
-           numOfChunksTarget=100,seed=1,numOfCores=5)
+``` r
+#sum(resultGenes$qValue<=0.05) #11,742 eGenes identified.
 ```
 
 ## 3. `callSigGeneSNPPairs()` for identifying significant gene-SNP pairs
@@ -168,22 +194,16 @@ If `approach="standard"`, then `sigGeneSNPPairMethod` can be either
 `"FastQTL"` or `"topPercent"`. If `approach="Clipper"`, then
 `sigGeneSNPPairMethod` cannot be `"FastQTL"`.
 
-`callSigGeneSNPPairs()` outputs several files in the output directory.
-The most important one is named “\_resultSigGeneSNPPairs_FastQTL.rds” or
-“\_resultSigGeneSNPPairs_topPercent.rds” (depending on
-`sigGeneSNPPairMethod`), which can be read into R with `readRDS()`. Each
-row corresponds to a significant gene-SNP pair.
-
 ``` r
 #Example code.
 
-#Follow up with the standard variant of ClipperQTL.
-approach<-"standard"
-B<-1000
+# #Follow up with the standard variant of ClipperQTL.
+# approach<-"standard"
+# B<-1000
 
-# #Alternatively, follow up with the Clipper variant of ClipperQTL.
-# approach<-"Clipper"
-# B<-1
+#Alternatively, follow up with the Clipper variant of ClipperQTL.
+approach<-"Clipper"
+B<-1
 
 outputDir<-paste0("/home/heatherjzhou/2022.03.14_ClipperQTL/ClipperQTL/example/Whole_Blood_","approach=",approach,"_B=",B,"/") #"~" may not be recognized as the home directory in C++; you may need to spell out the directory name instead.
 
@@ -193,6 +213,12 @@ callSigGeneSNPPairs(exprFile,covFile,genotypeFile,tabixProgram,outputDir,
                     numOfCores=1,
                     FDR_eGene=0.05,sigGeneSNPPairMethod=NULL,percent=1) #Let the function choose sigGeneSNPPairMethod automatically.
 ```
+
+`callSigGeneSNPPairs()` outputs several files in the output directory.
+The most important one is named “\_resultSigGeneSNPPairs_FastQTL.rds” or
+“\_resultSigGeneSNPPairs_topPercent.rds” (depending on
+`sigGeneSNPPairMethod`), which can be read into R with `readRDS()`. Each
+row corresponds to a significant gene-SNP pair.
 
 Please note that `callSigGeneSNPPairs()` only provides a rudimentary
 analysis of significant gene-SNP pairs. For a more in-depth analysis,
