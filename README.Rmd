@@ -3,7 +3,7 @@ output: github_document
 title: ClipperQTL
 bibliography: misc/references.bib
 nocite: |
-  @zhouClipperQTLUltrafastPowerful2023
+  @zhouClipperQTLUltrafastPowerful2025b
 
   @gtexconsortiumGTExConsortiumAtlas2020
   @ongenFastEfficientQTL2016
@@ -14,7 +14,7 @@ nocite: |
   @wangSimpleNewApproach2020
 ---
 
-We have shown that ClipperQTL performs as well as FastQTL and runs up to 500 times faster [-@zhouClipperQTLUltrafastPowerful2023]. Without relying on GPUs, it is up to 30 times more computationally efficient than tensorQTL, a GPU-based implementation of FastQTL. Here we show how to install and use ClipperQTL.
+We have shown that ClipperQTL performs as well as FastQTL and runs up to 500 times faster [-@zhouClipperQTLUltrafastPowerful2025b]. Without relying on GPUs, it is up to 30 times more computationally efficient than tensorQTL, a GPU-based implementation of FastQTL. Here we show how to install and use ClipperQTL.
 
 ## 1. Installation
 
@@ -64,7 +64,7 @@ temp2<-readr::read_delim(covFile,delim="\t",escape_double=FALSE,trim_ws=TRUE) #5
 
 The genotype file must be a .vcf.gz file. A .tbi index file must be present in the same directory, which can be generated using HTSlib tabix (https://www.htslib.org/doc/tabix.html). The non-empty genotype entries must start with "0|0", "0|1", "1|0", or "1|1" (trailing characters are ok). The missing genotype entries will be imputed as within-SNP averages. This file can contain more samples than the expression file and the covariate file (which must have the same samples). An example genotype file is not provided in this repository. The GTEx V8 genotype file can be downloaded from the AnVIL repository with an approved dbGaP application (see https://gtexportal.org/home/protectedDataAccess).
 
-The main method parameters of `ClipperQTL()` are `approach` and `B`. If the sample size is less than or equal to 450, then we recommend setting `approach="standard"` and `B=1000`. If the sample size is greater than 450, then you may set `approach="standard"` and `B=1000`, or, you may set `approach="Clipper"` and `B=1` or `B` between 20 and 100 for faster computational speed [-@zhouClipperQTLUltrafastPowerful2023]. Regarding which variant of ClipperQTL should be used when the sample size is large enough, we believe that if computational efficiency is a priority, then the Clipper variant should be used. However, if the majority of data sets in the study have smaller sample sizes, then you may choose to use the standard variant on all data sets for consistency.
+The main method parameters of `ClipperQTL()` are `approach` and `B`. If the sample size is less than or equal to 450, then we recommend setting `approach="standard"` and `B=1000`. If the sample size is greater than 450, then you may set `approach="standard"` and `B=1000`, or, you may set `approach="Clipper"` and `B=1` or `B` between 20 and 100 for faster computational speed [-@zhouClipperQTLUltrafastPowerful2025b]. Regarding which variant of ClipperQTL should be used when the sample size is large enough, we believe that if computational efficiency is a priority, then the Clipper variant should be used. However, if the majority of data sets in the study have smaller sample sizes, then you may choose to use the standard variant on all data sets for consistency.
 
 ```{r,eval=FALSE}
 #Example code.
@@ -152,7 +152,7 @@ ClipperQTL should use no more than a few GB of memory per core on data sets with
 
 ## Citation
 
-To acknowledge this package or this tutorial, please cite our paper [-@zhouClipperQTLUltrafastPowerful2023]: https://doi.org/10.1101/2023.08.28.555191. For questions, please email us at lijy03@g.ucla.edu or heatherjzhou@ucla.edu.
+To acknowledge this package or this tutorial, please cite our paper [-@zhouClipperQTLUltrafastPowerful2025b]: https://doi.org/10.1186/s13059-025-03662-y. For questions, please email us at lijy03@g.ucla.edu or heatherjzhou@ucla.edu.
 
 ## References
 

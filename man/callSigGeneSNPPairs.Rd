@@ -66,5 +66,5 @@ If \code{approach="standard"}, then \code{sigGeneSNPPairMethod} can be either \c
 \code{callSigGeneSNPPairs()} outputs several files in the output directory. The most important one is named "_resultSigGeneSNPPairs_FastQTL.rds" or "_resultSigGeneSNPPairs_topPercent.rds" (depending on \code{sigGeneSNPPairMethod}), which can be read into R with \code{readRDS()}. Each row corresponds to a significant gene-SNP pair.
 }
 \references{
-Heather J. Zhou, Xinzhou Ge, and Jingyi Jessica Li. ClipperQTL: ultrafast and powerful eGene identification method. bioRxiv, 2023.
+Heather J. Zhou, Xinzhou Ge, and Jingyi Jessica Li. ClipperQTL: ultrafast and powerful eGene identification method. Genome Biology, 26:207, 2025.
 }

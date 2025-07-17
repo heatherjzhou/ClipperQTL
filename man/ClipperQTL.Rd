@@ -64,7 +64,7 @@ The main method parameters of \code{ClipperQTL()} are \code{approach} and \code{
 \code{ClipperQTL()} outputs several files in the output directory. The most important one is named "_resultGenes.rds", which can be read into R with \code{readRDS()}. The first four columns are identical to the first four columns in the expression file. The next \code{1+B} columns are the maximum absolute correlations from the experimental round and the permutation rounds. The second to last column is \code{pValue} (standard variant) or \code{contrastScore} (Clipper variant). The last column is \code{qValue}. Each row corresponds to a gene. The eGenes are those with \code{qValue} under the target FDR threshold, e.g., 0.05.
 }
 \references{
-Heather J. Zhou, Xinzhou Ge, and Jingyi Jessica Li. ClipperQTL: ultrafast and powerful eGene identification method. bioRxiv, 2023.
+Heather J. Zhou, Xinzhou Ge, and Jingyi Jessica Li. ClipperQTL: ultrafast and powerful eGene identification method. Genome Biology, 26:207, 2025.
 
 GTEx Consortium. The GTEx Consortium atlas of genetic regulatory effects across human tissues. Science, 369(6509):1318–1330, 2020.
 

@@ -2,7 +2,7 @@ ClipperQTL
 ================
 
 We have shown that ClipperQTL performs as well as FastQTL and runs up to
-500 times faster (2023). Without relying on GPUs, it is up to 30 times
+500 times faster (2025). Without relying on GPUs, it is up to 30 times
 more computationally efficient than tensorQTL, a GPU-based
 implementation of FastQTL. Here we show how to install and use
 ClipperQTL.
@@ -95,7 +95,7 @@ the sample size is less than or equal to 450, then we recommend setting
 `approach="standard"` and `B=1000`. If the sample size is greater than
 450, then you may set `approach="standard"` and `B=1000`, or, you may
 set `approach="Clipper"` and `B=1` or `B` between 20 and 100 for faster
-computational speed (2023). Regarding which variant of ClipperQTL should
+computational speed (2025). Regarding which variant of ClipperQTL should
 be used when the sample size is large enough, we believe that if
 computational efficiency is a priority, then the Clipper variant should
 be used. However, if the majority of data sets in the study have smaller
@@ -236,7 +236,7 @@ default number of cores, which is 1 for both functions.
 ## Citation
 
 To acknowledge this package or this tutorial, please cite our paper
-(2023): <https://doi.org/10.1101/2023.08.28.555191>. For questions,
+(2025): <https://doi.org/10.1186/s13059-025-03662-y>. For questions,
 please email us at <lijy03@g.ucla.edu> or <heatherjzhou@ucla.edu>.
 
 ## References
@@ -278,11 +278,11 @@ Society: Series B (Statistical Methodology)* 82 (5): 1273–1300.
 
 </div>
 
-<div id="ref-zhouClipperQTLUltrafastPowerful2023" class="csl-entry">
+<div id="ref-zhouClipperQTLUltrafastPowerful2025b" class="csl-entry">
 
-Zhou, Heather J., Xinzhou Ge, and Jingyi Jessica Li. 2023. “ClipperQTL:
+Zhou, Heather J., Xinzhou Ge, and Jingyi Jessica Li. 2025. “ClipperQTL:
 Ultrafast and Powerful <span class="nocase">eGene</span> Identification
-Method.” *bioRxiv*.
+Method.” *Genome Biology* 26 (1).
 
 </div>
 

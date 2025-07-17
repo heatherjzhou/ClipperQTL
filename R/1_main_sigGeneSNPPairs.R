@@ -38,7 +38,7 @@
 #' @param percent Key argument. Only relevant if \code{"topPercent"} is used. Default is \code{1}, which means the top 1\% local common SNPs (in terms of significance of association) will be identified as significant for each eGene. See below.
 #'
 #' @references
-#' Heather J. Zhou, Xinzhou Ge, and Jingyi Jessica Li. ClipperQTL: ultrafast and powerful eGene identification method. bioRxiv, 2023.
+#' Heather J. Zhou, Xinzhou Ge, and Jingyi Jessica Li. ClipperQTL: ultrafast and powerful eGene identification method. Genome Biology, 26:207, 2025.
 #'
 #' @export
 
